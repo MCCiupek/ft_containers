@@ -165,11 +165,14 @@ namespace ft
 	template <class Iter1, class Iter2>
 	bool operator>=(const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y) { return x.base() >= y.base(); }
 
-	template <class Iter1, class Iter2>
-	bool operator+(const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y) { return x.base() + y.base(); }
+	template<typename T>
+	typename reverse_iterator<T>::difference_type operator-(const reverse_iterator<T> &x, const reverse_iterator<T> &y) { return x.base() - y.base(); }
 
 	template <class Iter1, class Iter2>
-	bool operator-(const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y) { return x.base() - y.base(); }
+	typename reverse_iterator<Iter1>::difference_type operator-(const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y) { return x.base() - y.base(); }
+
+	template<typename T>
+	reverse_iterator<T> operator+(typename reverse_iterator<T>::difference_type __n, const reverse_iterator<T> &i) { return i + __n; }
 
 	/* ------------------------------------------------------------- */
 	/* ---------------------- VECT ITERATOR ------------------------ */
@@ -178,11 +181,13 @@ namespace ft
 	class vector_iterator : public iterator <random_access_iterator_tag, T> {
 
 		public:
+
 			typedef typename vector_iterator<T>::reference			reference;
 			typedef typename vector_iterator<T>::pointer			pointer;
 			typedef typename vector_iterator<T>::difference_type	difference_type;
 
 		protected:
+
 			pointer	current;
 
 		public:
@@ -209,6 +214,8 @@ namespace ft
 			vector_iterator &operator-=( difference_type __n ) { current -= __n; return *this; }
 			vector_iterator operator-( difference_type __n ) const { return vector_iterator(current - __n); }
 
+			operator vector_iterator<const T>( void ) const { return (vector_iterator<const T>(current)); }
+
 	}; /* class vector_iterator */
 
 	template <class Iter1, class Iter2>
@@ -229,11 +236,14 @@ namespace ft
 	template <class Iter1, class Iter2>
 	bool operator>=(const vector_iterator<Iter1>& x, const vector_iterator<Iter2>& y) { return x.base() >= y.base(); }
 
-	template <class Iter1, class Iter2>
-	bool operator+(const vector_iterator<Iter1>& x, const vector_iterator<Iter2>& y) { return x.base() + y.base(); }
+	template<typename T>
+	typename vector_iterator<T>::difference_type operator-(const vector_iterator<T> &x, const vector_iterator<T> &y) { return x.base() - y.base(); }
 
 	template <class Iter1, class Iter2>
-	bool operator-(const vector_iterator<Iter1>& x, const vector_iterator<Iter2>& y) { return x.base() - y.base(); }
+	typename vector_iterator<Iter1>::difference_type operator-(const vector_iterator<Iter1>& x, const vector_iterator<Iter2>& y) { return x.base() - y.base(); }
+
+	template<typename T>
+	vector_iterator<T> operator+(typename vector_iterator<T>::difference_type __n, const vector_iterator<T> &i) { return i + __n; }
 
 } /* namespace ft */
 

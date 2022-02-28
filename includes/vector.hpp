@@ -16,16 +16,16 @@ namespace ft
 		
 		public:
 
-			typedef T										value_type;
-			typedef Allocator								allocator_type;
-			typedef typename allocator_type::reference			reference;
-			typedef typename allocator_type::const_reference	const_reference;
-			typedef std::size_t								size_type;
-			typedef std::ptrdiff_t							difference_type;
-			typedef typename allocator_type::pointer		pointer;
-			typedef typename allocator_type::const_pointer	const_pointer;
-			typedef typename ft::vector_iterator<T> 		iterator;
-			typedef typename ft::vector_iterator<const T> 	const_iterator;
+			typedef T												value_type;
+			typedef Allocator										allocator_type;
+			typedef typename allocator_type::reference				reference;
+			typedef typename allocator_type::const_reference		const_reference;
+			typedef std::size_t										size_type;
+			typedef std::ptrdiff_t									difference_type;
+			typedef typename allocator_type::pointer				pointer;
+			typedef typename allocator_type::const_pointer			const_pointer;
+			typedef typename ft::vector_iterator<T> 				iterator;
+			typedef typename ft::vector_iterator<const T> 			const_iterator;
 			typedef typename ft::reverse_iterator<iterator>			reverse_iterator;
 			typedef typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 		
@@ -47,8 +47,8 @@ namespace ft
 		private:
 
 			void v_allocate(size_type n) {
-				__begin_ = __end_ = __alloc().allocate(n);
-				__end_cap() = __begin_ + n;
+				__begin_ = __alloc().allocate(n);
+				__end_cap()  = __end_ = __begin_ + n;
 			}
 
 			template <typename InputIt>
@@ -120,10 +120,12 @@ namespace ft
 			 *	with each element constructed from its corresponding element in that range, in the same order.
 			 */
 			template <class InputIt>
-			vector( InputIt first, InputIt last, const Allocator& alloc = Allocator() ) :
+			vector( InputIt first, InputIt last, const Allocator& alloc = Allocator(),
+				typename enable_if<!ft::is_integral<InputIt>::value>::type* = 0 ) :
 					__begin_(nullptr), __end_(nullptr), __end_cap_(nullptr, alloc)
 			{
-				v_allocate(static_cast<size_type>(last - first));
+				difference_type n = ft::distance(first, last);
+				v_allocate(n);
 				range_init(__begin_, first, last);
             };
 
@@ -181,25 +183,10 @@ namespace ft
 			size_type max_size() const { return static_cast<size_type>(get_allocator().max_size()); };
 
 			void resize (size_type n, value_type val = value_type()) {
-				size_type old_size = size();
-
-				if (old_size < n) {
-					size_type to_add = static_cast<size_type>(__end_cap() - end());
-					size_type room_left = n - old_size;
-					if (to_add >= room_left)
-						for (; to_add > 0; --to_add)
-							get_allocator().construct(end()++, val);
-					else
-					{
-						vector<T, Allocator> __new(n, val);
-						for (size_type i = 0; i < size(); i++)
-							__new.get_allocator().construct(__new.begin() + i, *(begin() + i));
-						clear();
-						*this = __new;
-					}
-				}
-				else if (old_size > n)
-					erase(iterator(begin() + n), iterator(end()));
+				if ( n < size() )
+					erase(iterator(__begin_ + n), iterator(__end_));
+				else
+					insert(end(), n - size(), val);
 			};
 
 			size_type capacity() const { return static_cast<size_type>(__end_cap() - __begin_); };
@@ -208,7 +195,7 @@ namespace ft
 
 			void reserve (size_type n) {
 				if (n > capacity()) {
-					resize(n);
+					realloc(n);
 				}
 			};
 
@@ -265,7 +252,8 @@ namespace ft
 			template <class InputIterator>
 			void assign (InputIterator first, InputIterator last,
 				typename enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
-				size_type size = static_cast<size_type>(last - first);
+				//size_type size = static_cast<size_type>(last - first);
+				difference_type size = ft::distance(first, last);
 
 				clear();
 				reserve(size);
@@ -297,14 +285,15 @@ namespace ft
 			template <class InputIterator>
 			void insert (iterator position, InputIterator first, InputIterator last,
 				typename enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
-				range_init(insert_shared(position.base(), last - first) + __begin_, first, last);
+				difference_type size = ft::distance(first, last);
+				range_init(insert_shared(position.base(), size) + __begin_, first, last);
 			};
 
 			iterator erase (iterator position) { return erase(position, position + 1); };
 
 			iterator erase (iterator first, iterator last) { 
 				if (first == last)
-					return (last);
+					return last;
 				difference_type diff = last - first;
 				for(; first != last; first++)
 					__alloc().destroy(first.base());
@@ -314,14 +303,14 @@ namespace ft
 					__alloc().destroy(last.base());
 				}
 				__end_ -= diff;
-				return (first - diff);
+				return first - diff;
 			};
 
 			void swap (vector& x) {
 				std::swap(__begin_, x.__begin_);
 				std::swap(__end_, x.__end_);
 				std::swap(__end_cap(), x.__end_cap());
-				std::swap(__alloc(), x.get_allocator());
+				std::swap(__alloc(), x.__alloc());
 			};
 
 			void clear() { erase(begin(), end()); };
@@ -336,7 +325,7 @@ namespace ft
 	/* ------------------------------------------------------------- */
 	/* ---------------- NON-MEMBER FUNCTION OVERLOAD --------------- */
 
-	/* 		Relational operaors: */
+	/* 		Relational operators: */
 
 	template <class T, class Allocator>
 	bool operator== (const vector<T,Allocator>& lhs, const vector<T,Allocator>& rhs) {
