@@ -91,31 +91,30 @@ void	prepost_incdec(TESTED_NAMESPACE::vector<TESTED_TYPE> &vct)
 
 int		main(void)
 {
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(7);
+	const int size = 5;
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(size);
+	TESTED_NAMESPACE::vector<TESTED_TYPE>::reverse_iterator it = vct.rbegin();
+	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator ite = vct.rbegin();
 
-	for (unsigned long int i = 0; i < vct.size(); ++i)
-	{
-		vct.at(i) = (vct.size() - i) * 3;
-		std::cout << "vct.at(): " << vct.at(i) << " | ";
-		std::cout << "vct[]: " << vct[i] << std::endl;
-	}
-	printSize(vct);
+	for (int i = 0; i < size; ++i)
+		it[i] = (size - i) * 5;
 
-	TESTED_NAMESPACE::vector<TESTED_TYPE> const vct_c(vct);
+	it = it + 5;
+	it = 1 + it;
+	it = it - 4;
+	std::cout << *(it += 2) << std::endl;
+	std::cout << *(it -= 1) << std::endl;
 
-	printSize(vct_c);
+	*(it -= 2) = 42;
+	*(it += 2) = 21;
 
-	std::cout << "front(): " << vct.front() << " " << vct_c.front() << std::endl;
-	std::cout << "back(): " << vct.back() << " " <<  vct_c.back() << std::endl;
+	std::cout << "const_ite +=/-=: " << *(ite += 2) << " | " << *(ite -= 2) << std::endl;
 
-	try {
-		vct.at(10) = 42;
-	}
-	catch (std::out_of_range &e) {
-		std::cout << "Catch out_of_range exception!" << std::endl;
-	}
-	catch (std::exception &e) {
-		std::cout << "Catch exception: " << e.what() << std::endl;
-	}
+	std::cout << "(it == const_it): " << (ite == it) << std::endl;
+	std::cout << *ite << " - " << *it << " = " << (ite - it) << std::endl;
+	std::cout << "(const_ite - it): " << (ite - it) << std::endl;
+	std::cout << "(ite + 3 == it): " << (ite + 3 == it) << std::endl;
+
+	printSize(vct, true);
 	return (0);
 }
