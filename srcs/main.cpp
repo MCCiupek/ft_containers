@@ -33,6 +33,7 @@ void	printSize(TESTED_NAMESPACE::vector<T> const &vct, bool print_content = true
 	{
 		typename TESTED_NAMESPACE::vector<T>::const_iterator it = vct.begin();
 		typename TESTED_NAMESPACE::vector<T>::const_iterator ite = vct.end();
+
 		std::cout << std::endl << "Content is:" << std::endl;
 		for (; it != ite; ++it)
 			std::cout << "- " << *it << std::endl;
@@ -85,39 +86,36 @@ void	prepost_incdec(TESTED_NAMESPACE::vector<TESTED_TYPE> &vct)
 	std::cout << *it_tmp << " | " << *it << std::endl;
 	std::cout << "###############################################" << std::endl;
 }
+
+
+
 int		main(void)
 {
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(5);
-	TESTED_NAMESPACE::vector<TESTED_TYPE>::iterator it = vct.begin(), ite = vct.end();
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(7);
 
-	std::cout << "len: " << (ite - it) << std::endl;
-	for (; it != ite; ++it)
-		*it = (ite - it);
-
-	it = vct.begin();
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct_range(it, --(--ite));
-	for (int i = 0; it != ite; ++it)
-		*it = ++i * 5;
-
-	it = vct.begin();
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct_copy(vct);
-	for (int i = 0; it != ite; ++it){
-		*it = ++i * 7;
-	vct_copy.push_back(42);
-	vct_copy.push_back(21);
-
-	std::cout << "\t-- PART ONE --" << std::endl;
+	for (unsigned long int i = 0; i < vct.size(); ++i)
+	{
+		vct.at(i) = (vct.size() - i) * 3;
+		std::cout << "vct.at(): " << vct.at(i) << " | ";
+		std::cout << "vct[]: " << vct[i] << std::endl;
+	}
 	printSize(vct);
-	printSize(vct_range);
-	printSize(vct_copy);
 
-	vct = vct_copy;
-	vct_copy = vct_range;
-	vct_range.clear();
+	TESTED_NAMESPACE::vector<TESTED_TYPE> const vct_c(vct);
 
-	std::cout << "\t-- PART TWO --" << std::endl;
-	printSize(vct);
-	printSize(vct_range);
-	printSize(vct_copy);
+	printSize(vct_c);
+
+	std::cout << "front(): " << vct.front() << " " << vct_c.front() << std::endl;
+	std::cout << "back(): " << vct.back() << " " <<  vct_c.back() << std::endl;
+
+	try {
+		vct.at(10) = 42;
+	}
+	catch (std::out_of_range &e) {
+		std::cout << "Catch out_of_range exception!" << std::endl;
+	}
+	catch (std::exception &e) {
+		std::cout << "Catch exception: " << e.what() << std::endl;
+	}
 	return (0);
 }

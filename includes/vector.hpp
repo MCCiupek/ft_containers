@@ -24,8 +24,8 @@ namespace ft
 			typedef std::ptrdiff_t									difference_type;
 			typedef typename allocator_type::pointer				pointer;
 			typedef typename allocator_type::const_pointer			const_pointer;
-			typedef typename ft::vector_iterator<T> 				iterator;
-			typedef typename ft::vector_iterator<const T> 			const_iterator;
+			typedef typename ft::random_access_iterator<T> 			iterator;
+			typedef typename ft::random_access_iterator<const T> 	const_iterator;
 			typedef typename ft::reverse_iterator<iterator>			reverse_iterator;
 			typedef typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 		
@@ -53,13 +53,15 @@ namespace ft
 
 			template <typename InputIt>
 			void range_init(pointer position, InputIt first, InputIt last) {
-				for (; first != last; position++, first++)
-					__alloc().construct(position, *first);
+				//std::cout << "rg init" << std::endl;
+				for (; first != last; first++)
+					__alloc().construct(position++, *first);
 			}
 
 			void value_init(pointer position, size_type n, const value_type& value) {
-				for (size_type i = 0; i < n; position++, i++)
-					__alloc().construct(position, value);
+				//std::cout << "val init" << std::endl;
+				for (size_type i = 0; i < n; i++)
+					__alloc().construct(position++, value);
 			}
 
 			void realloc(size_type n) {
@@ -67,8 +69,8 @@ namespace ft
 				begin_new = end_new = __alloc().allocate(n);
 				if (!empty())
 				{
-					for(pointer begin = __begin_; begin != __end_; begin++, end_new++)
-						__alloc().construct(end_new, *begin);
+					for(pointer begin = __begin_; begin != __end_; begin++)
+						__alloc().construct(end_new++, *begin);
 				}
 				this->~vector();
 				__begin_ = begin_new;
@@ -138,6 +140,7 @@ namespace ft
 			{
 				v_allocate(other.size());
 				range_init(__begin_, other.begin(), other.end());
+				//insert(begin(), other.begin(), other.end());
             };
 
 			/**
@@ -292,18 +295,33 @@ namespace ft
 			iterator erase (iterator position) { return erase(position, position + 1); };
 
 			iterator erase (iterator first, iterator last) { 
-				if (first == last)
-					return last;
-				difference_type diff = last - first;
-				for(; first != last; first++)
-					__alloc().destroy(first.base());
-				for (; last.base() != __end_; last++)
+				// if (first == last)
+				// 	return last;
+				// difference_type diff = ft::distance(first, last);
+				// for(; first != last; first++)
+				// 	__alloc().destroy(first.base());
+				// for (; last.base() != __end_; last++)
+				// {
+				// 	__alloc().construct((*last - diff).base(), *last);
+				// 	__alloc().destroy(last.base());
+				// }
+				// __end_ -= diff;
+				// return first - diff;
+
+				iterator ret = first;
+				iterator tmp = first;
+				while (first != last)
 				{
-					__alloc().construct((last - diff).base(), *last);
-					__alloc().destroy(last.base());
+					__alloc().destroy(&(*first));
+					first++;
 				}
-				__end_ -= diff;
-				return first - diff;
+				for (int i = 0; i < __end_ - &(*last); i++)
+				{
+					__alloc().construct(&(*tmp) + i, *(&(*last) + i));
+					__alloc().destroy(&(*last) + i);
+				}
+				__end_ -= (&(*last) - &(*tmp));
+				return (ret);
 			};
 
 			void swap (vector& x) {
