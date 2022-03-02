@@ -38,13 +38,13 @@ namespace ft
 			pointer							__end_;
 			ft::pair<pointer, Allocator>	__end_cap_;
 
+		private:
+
 			pointer& __end_cap() { return __end_cap_.first; }
 			const pointer& __end_cap() const { return __end_cap_.first; }
 		
 			allocator_type& __alloc() { return __end_cap_.second; }
 			const allocator_type& __alloc() const { return __end_cap_.second; }
-		
-		private:
 
 			void v_allocate(size_type n) {
 				__begin_ = __alloc().allocate(n);
@@ -53,13 +53,11 @@ namespace ft
 
 			template <typename InputIt>
 			void range_init(pointer position, InputIt first, InputIt last) {
-				//std::cout << "rg init" << std::endl;
 				for (; first != last; first++)
 					__alloc().construct(position++, *first);
 			}
 
 			void value_init(pointer position, size_type n, const value_type& value) {
-				//std::cout << "val init" << std::endl;
 				for (size_type i = 0; i < n; i++)
 					__alloc().construct(position++, value);
 			}
@@ -255,7 +253,6 @@ namespace ft
 			template <class InputIterator>
 			void assign (InputIterator first, InputIterator last,
 				typename enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
-				//size_type size = static_cast<size_type>(last - first);
 				difference_type size = ft::distance(first, last);
 
 				clear();
@@ -295,19 +292,6 @@ namespace ft
 			iterator erase (iterator position) { return erase(position, position + 1); };
 
 			iterator erase (iterator first, iterator last) { 
-				// if (first == last)
-				// 	return last;
-				// difference_type diff = ft::distance(first, last);
-				// for(; first != last; first++)
-				// 	__alloc().destroy(first.base());
-				// for (; last.base() != __end_; last++)
-				// {
-				// 	__alloc().construct((*last - diff).base(), *last);
-				// 	__alloc().destroy(last.base());
-				// }
-				// __end_ -= diff;
-				// return first - diff;
-
 				iterator ret = first;
 				iterator tmp = first;
 				while (first != last)

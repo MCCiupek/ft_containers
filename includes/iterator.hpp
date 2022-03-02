@@ -245,6 +245,77 @@ namespace ft
 	template<typename T>
 	random_access_iterator<T> operator+(typename random_access_iterator<T>::difference_type __n, const random_access_iterator<T> &i) { return i + __n; }
 
+	/* ------------------------------------------------------------- */
+	/* ----------------------- MAP ITERATOR ------------------------ */
+	
+	template<typename T>
+	class bidirectional_iterator : public iterator <bidirectional_iterator_tag, T> {
+
+		public:
+
+			typedef typename bidirectional_iterator<T>::reference		reference;
+			typedef typename bidirectional_iterator<T>::pointer			pointer;
+			typedef typename bidirectional_iterator<T>::difference_type	difference_type;
+
+		protected:
+
+			pointer	current;
+
+		public:
+
+			bidirectional_iterator( void ) : current() {};
+			explicit bidirectional_iterator( pointer x ) : current(x) {};
+			bidirectional_iterator( const bidirectional_iterator &other ) : current(other.base()) {};
+			bidirectional_iterator &operator=( const bidirectional_iterator &other ) { current = other.base(); return *this; };
+			~bidirectional_iterator( void ) {};
+
+			pointer base( void ) const { return current; }
+
+			reference operator*( void ) const { return *current; }
+			pointer operator->( void ) const { return &(operator*()); }
+
+			reference operator[]( difference_type __n ) const { return *(*this + __n); }
+
+			bidirectional_iterator &operator++( void ) { ++current; return *this; }
+			bidirectional_iterator operator++( int ) { bidirectional_iterator __tmp(*this); ++current; return __tmp; }
+			bidirectional_iterator &operator+=( difference_type __n ) { current += __n; return *this; }
+			bidirectional_iterator operator+( difference_type __n ) const { return bidirectional_iterator(current + __n); }
+			bidirectional_iterator &operator--( void ) { --current; return *this; }
+			bidirectional_iterator operator--( int ) { bidirectional_iterator __tmp(*this); --current; return __tmp; }
+			bidirectional_iterator &operator-=( difference_type __n ) { current -= __n; return *this; }
+			bidirectional_iterator operator-( difference_type __n ) const { return bidirectional_iterator(current - __n); }
+
+			operator bidirectional_iterator<const T>( void ) const { return bidirectional_iterator<const T>(current); }
+
+	}; /* class bidirectional_iterator */
+
+	template <class Iter1, class Iter2>
+	bool operator==(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() == y.base(); }
+
+	template <class Iter1, class Iter2>
+	bool operator<(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() < y.base(); }
+
+	template <class Iter1, class Iter2>
+	bool operator>(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() > y.base(); }
+
+	template <class Iter1, class Iter2>
+	bool operator!=(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() != y.base(); }
+
+	template <class Iter1, class Iter2>
+	bool operator<=(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() <= y.base(); }
+
+	template <class Iter1, class Iter2>
+	bool operator>=(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() >= y.base(); }
+
+	template<typename T>
+	typename bidirectional_iterator<T>::difference_type operator-(const bidirectional_iterator<T> &x, const bidirectional_iterator<T> &y) { return x.base() - y.base(); }
+
+	template <class Iter1, class Iter2>
+	typename bidirectional_iterator<Iter1>::difference_type operator-(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() - y.base(); }
+
+	template<typename T>
+	bidirectional_iterator<T> operator+(typename bidirectional_iterator<T>::difference_type __n, const bidirectional_iterator<T> &i) { return i + __n; }
+
 } /* namespace ft */
 
 #endif /* ITERATOR_HPP */
