@@ -4,6 +4,7 @@
 #include <list>
 #include <stdlib.h>
 #include "red_black_tree.hpp"
+#include <stdlib.h>
 
 #if 0
 	#include <vector>
@@ -16,33 +17,146 @@
 #define TESTED_TYPE int
 #define T_SIZE_TYPE typename TESTED_NAMESPACE::vector<T>::size_type
 
+# define ADD '+'
+# define DELETE '-'
 
-int		main(void)
-{
+void basic_node( void ) {
 	Node<TESTED_TYPE> n;
 	Node<TESTED_TYPE> n1(5);
 	Node<TESTED_TYPE> n2(n);
 	Node<TESTED_TYPE> n3 = n1;
 
-	std::cout << n << std::endl;
-	std::cout << n1 << std::endl;
-	std::cout << n2 << std::endl;
-	std::cout << n3 << std::endl;
+	std::cout << "*** NODE ***" << std::endl;
 
-	Tree<TESTED_TYPE> t;
+	std::cout << "node: ---" << std::endl;
+	std::cout << n << std::endl;
+	std::cout << "---------" << std::endl;
+	// std::cout << n1 << std::endl;
+	// std::cout << n2 << std::endl;
+	// std::cout << n3 << std::endl;
+}
+
+void basic_tree( void ) {
+	std::cout << std::endl << "*** BST ***" << std::endl;
+
+	BinarySearchTree<TESTED_TYPE> t;
 	t.insert(2);
 	t.insert(1);
 	t.insert(1);
 	t.insert(3);
 
-	t.print_keys();
+	std::cout << t << std::endl;
 
 	try {
 		std::cout << *(t.search(1)) << std::endl;
-		std::cout << t.search(11) << std::endl;
+		std::cout << *(t.search(11)) << std::endl;
 	} catch (std::exception& e) {
 		std::cout << e.what() << std::endl;
 	}
+}
 
-	return (0);
+void basic_rbt( void ) {
+	
+	std::cout << std::endl << "*** RBT ***" << std::endl;
+
+	RedBlackTree<TESTED_TYPE> brt;
+	std::cout << "create brt" << std::endl;
+
+	std::cout << brt << std::endl;
+
+	brt.insert(2);
+	brt.insert(1);
+	std::cout << "insert 2, 1" << std::endl;
+
+	std::cout << brt << std::endl;
+
+	brt.insert(1);
+	brt.insert(3);
+	std::cout << "insert 3, 1" << std::endl;
+
+	std::cout << brt << std::endl;
+
+	brt.remove(3);
+	std::cout << "remove 3" << std::endl;
+
+	std::cout << brt << std::endl;
+
+	brt.remove(-3);
+	brt.remove(2);
+	std::cout << "remove -3, 2" << std::endl;
+
+	std::cout << brt << std::endl;
+
+	brt.remove(1);
+	std::cout << "remove 1" << std::endl;
+
+	std::cout << brt << std::endl;
+}
+
+void classic_tree( void ) {
+
+	BinarySearchTree<TESTED_TYPE> tree;
+	TESTED_TYPE elem;
+	char flag;
+	std::string buf;
+
+	std::cin >> buf;
+
+	while ( buf != "" ) {
+		flag = buf[0];
+		elem = std::atoi(&buf[1]);
+
+		if (flag == ADD) {
+			tree.insert(elem);
+		}
+		else if (flag == DELETE) {
+			tree.remove(elem);
+		} else {
+			std::cout << "unknown flag" << std::endl;
+		}
+		std::cout << tree << std::endl;
+		std::cin >> buf;
+	}
+}
+
+void classic_rbt( void ) {
+
+	RedBlackTree<TESTED_TYPE> brt;
+	TESTED_TYPE elem;
+	char flag;
+	std::string buf;
+
+	std::cin >> buf;
+
+	while ( buf != "" ) {
+		flag = buf[0];
+		elem = std::atoi(&buf[1]);
+
+		if (flag == ADD) {
+			brt.insert(elem);
+		}
+		else if (flag == DELETE) {
+			brt.remove(elem);
+		} else {
+			std::cout << "unknown flag" << std::endl;
+		}
+		std::cout << brt << std::endl;
+		std::cin >> buf;
+	}
+}
+
+
+int		main(void)
+{
+	//basic_node();
+
+	//basic_tree();
+
+	//basic_rbt();
+
+	classic_tree();
+
+	//classic_rbt();
+
+	return 0;
 }
