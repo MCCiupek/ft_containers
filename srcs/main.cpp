@@ -102,7 +102,7 @@ void classic_tree( void ) {
 
 	std::cin >> buf;
 
-	while ( buf != "" ) {
+	while ( buf != "exit" ) {
 		flag = buf[0];
 		elem = std::atoi(&buf[1]);
 

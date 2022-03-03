@@ -149,7 +149,7 @@ class BinarySearchTree {
 				root = other.root;
 			return *this;
 		};
-		virtual ~BinarySearchTree() {};
+		virtual ~BinarySearchTree() { rdelete(root); };
 
 	private:
 
@@ -177,16 +177,15 @@ class BinarySearchTree {
 						_tmp = _tmp->left();
 					node->swap(_tmp);
 					node->right() = rremove(node->right(), key);
-					node->left() = rremove(node->left(), key);
 				}
-				if ( !node->left() && !node->right() ) {
+				else if ( !node->left() && !node->right() ) {
 					delete node;
 					return NULL;
 				}
-				if ( node->left() && !node->right() ) {
+				else if ( node->left() && !node->right() ) {
 					node = rremove(node->left(), key);
 				}
-				if ( !node->left() && node->right() ) {
+				else if ( !node->left() && node->right() ) {
 					node = rremove(node->right(), key);
 				}
 			}
@@ -197,6 +196,14 @@ class BinarySearchTree {
 			if (node != NULL) {
 				rprint_keys(node->left());
 				std::cout << node->getKey() << " ";
+				rprint_keys(node->right());
+			}
+		}
+
+		void rdelete( Node * node ) {
+			if (node != NULL) {
+				rprint_keys(node->left());
+				remove(node->getKey());
 				rprint_keys(node->right());
 			}
 		}
