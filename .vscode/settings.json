@@ -71,6 +71,7 @@
         "list": "cpp",
         "queue": "cpp",
         "set": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "__functional_base_03": "cpp"
     }
 }

@@ -8,155 +8,129 @@
 
 #if 0
 	#include <vector>
+	#include <map>
 	#define TESTED_NAMESPACE std
 #else
 	#include <vector.hpp>
+	#include <map.hpp>
 	#define TESTED_NAMESPACE ft
 #endif
 
 #define TESTED_TYPE int
 #define T_SIZE_TYPE typename TESTED_NAMESPACE::vector<T>::size_type
 
-# define ADD '+'
-# define DELETE '-'
 
-void basic_node( void ) {
-	Node<TESTED_TYPE> n;
-	Node<TESTED_TYPE> n1(5);
-	Node<TESTED_TYPE> n2(n);
-	Node<TESTED_TYPE> n3 = n1;
+// --- Class foo
+template <typename T>
+class foo {
+	public:
+		typedef T	value_type;
 
-	std::cout << "*** NODE ***" << std::endl;
+		foo(void) : value(), _verbose(false) { };
+		foo(value_type src, const bool verbose = false) : value(src), _verbose(verbose) { };
+		foo(foo const &src, const bool verbose = false) : value(src.value), _verbose(verbose) { };
+		~foo(void) { if (this->_verbose) std::cout << "~foo::foo()" << std::endl; };
+		void m(void) { std::cout << "foo::m called [" << this->value << "]" << std::endl; };
+		void m(void) const { std::cout << "foo::m const called [" << this->value << "]" << std::endl; };
+		foo &operator=(value_type src) { this->value = src; return *this; };
+		foo &operator=(foo const &src) {
+			if (this->_verbose || src._verbose)
+				std::cout << "foo::operator=(foo) CALLED" << std::endl;
+			this->value = src.value;
+			return *this;
+		};
+		value_type	getValue(void) const { return this->value; };
+		void		switchVerbose(void) { this->_verbose = !(this->_verbose); };
 
-	std::cout << "node: ---" << std::endl;
-	std::cout << n << std::endl;
-	std::cout << "---------" << std::endl;
-	// std::cout << n1 << std::endl;
-	// std::cout << n2 << std::endl;
-	// std::cout << n3 << std::endl;
+		operator value_type(void) const {
+			return value_type(this->value);
+		}
+	private:
+		value_type	value;
+		bool		_verbose;
+};
+
+template <typename T>
+std::ostream	&operator<<(std::ostream &o, foo<T> const &bar) {
+	o << bar.getValue();
+	return o;
+}
+// --- End of class foo
+
+template <typename T>
+T	inc(T it, int n)
+{
+	while (n-- > 0)
+		++it;
+	return (it);
 }
 
-void basic_tree( void ) {
-	std::cout << std::endl << "*** BST ***" << std::endl;
+template <typename T>
+T	dec(T it, int n)
+{
+	while (n-- > 0)
+		--it;
+	return (it);
+}
 
-	BinarySearchTree<TESTED_TYPE> t;
-	t.insert(2);
-	t.insert(1);
-	t.insert(1);
-	t.insert(3);
 
-	std::cout << t << std::endl;
+template <typename T>
+std::string	printPair(const T &iterator, bool nl = true, std::ostream &o = std::cout)
+{
+	o << "key: " << iterator->first << " | value: " << iterator->second;
+	if (nl)
+		o << std::endl;
+	return ("");
+}
 
-	try {
-		std::cout << *(t.search(1)) << std::endl;
-		std::cout << *(t.search(11)) << std::endl;
-	} catch (std::exception& e) {
-		std::cout << e.what() << std::endl;
+template <typename T_MAP>
+void	printSize(T_MAP const &mp, bool print_content = 1)
+{
+	std::cout << "size: " << mp.size() << std::endl;
+	std::cout << "max_size: " << mp.max_size() << std::endl;
+	if (print_content)
+	{
+		typename T_MAP::const_iterator it = mp.begin(), ite = mp.end();
+		std::cout << std::endl << "Content is:" << std::endl;
+		for (; it != ite; ++it)
+			std::cout << "- " << printPair(it, false) << std::endl;
 	}
+	std::cout << "###############################################" << std::endl;
 }
 
-void basic_rbt( void ) {
-	
-	std::cout << std::endl << "*** RBT ***" << std::endl;
+template <typename T1, typename T2>
+void	printReverse(TESTED_NAMESPACE::map<T1, T2> &mp)
+{
+	typename TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.end(), ite = mp.begin();
 
-	RedBlackTree<TESTED_TYPE> brt;
-	std::cout << "create brt" << std::endl;
-
-	std::cout << brt << std::endl;
-
-	brt.insert(2);
-	brt.insert(1);
-	std::cout << "insert 2, 1" << std::endl;
-
-	std::cout << brt << std::endl;
-
-	brt.insert(1);
-	brt.insert(3);
-	std::cout << "insert 3, 1" << std::endl;
-
-	std::cout << brt << std::endl;
-
-	brt.remove(3);
-	std::cout << "remove 3" << std::endl;
-
-	std::cout << brt << std::endl;
-
-	brt.remove(-3);
-	brt.remove(2);
-	std::cout << "remove -3, 2" << std::endl;
-
-	std::cout << brt << std::endl;
-
-	brt.remove(1);
-	std::cout << "remove 1" << std::endl;
-
-	std::cout << brt << std::endl;
-}
-
-void classic_tree( void ) {
-
-	BinarySearchTree<TESTED_TYPE> tree;
-	TESTED_TYPE elem;
-	char flag;
-	std::string buf;
-
-	std::cin >> buf;
-
-	while ( buf != "exit" ) {
-		flag = buf[0];
-		elem = std::atoi(&buf[1]);
-
-		if (flag == ADD) {
-			tree.insert(elem);
-		}
-		else if (flag == DELETE) {
-			tree.remove(elem);
-		} else {
-			std::cout << "unknown flag" << std::endl;
-		}
-		std::cout << tree << std::endl;
-		std::cin >> buf;
+	std::cout << "printReverse:" << std::endl;
+	while (it != ite) {
+		it--;
+		std::cout << "-> " << printPair(it, false) << std::endl;
 	}
+	std::cout << "_______________________________________________" << std::endl;
 }
 
-void classic_rbt( void ) {
 
-	RedBlackTree<TESTED_TYPE> brt;
-	TESTED_TYPE elem;
-	char flag;
-	std::string buf;
+#define T1 int
+#define T2 foo<int>
+typedef TESTED_NAMESPACE::map<T1, T2>::value_type T3;
+typedef TESTED_NAMESPACE::map<T1, T2>::iterator ft_iterator;
+typedef TESTED_NAMESPACE::map<T1, T2>::const_iterator ft_const_iterator;
 
-	std::cin >> buf;
-
-	while ( buf != "" ) {
-		flag = buf[0];
-		elem = std::atoi(&buf[1]);
-
-		if (flag == ADD) {
-			brt.insert(elem);
-		}
-		else if (flag == DELETE) {
-			brt.remove(elem);
-		} else {
-			std::cout << "unknown flag" << std::endl;
-		}
-		std::cout << brt << std::endl;
-		std::cin >> buf;
-	}
-}
-
+//static int iter = 0;
 
 int		main(void)
 {
-	//basic_node();
+	std::list<T3> lst;
+	unsigned int lst_size = 10;
 
-	//basic_tree();
+	for (unsigned int i = 0; i < lst_size; ++i)
+		lst.push_back(T3(i + 1, (i + 1) * 3));
 
-	//basic_rbt();
+	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
+	printSize(mp);
 
-	classic_tree();
-
-	//classic_rbt();
-
-	return 0;
+	return (0);
 }
+

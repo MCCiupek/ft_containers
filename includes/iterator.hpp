@@ -248,73 +248,120 @@ namespace ft
 	/* ------------------------------------------------------------- */
 	/* ----------------------- MAP ITERATOR ------------------------ */
 	
-	template<typename T>
+	template< class T, class Node >
 	class bidirectional_iterator : public iterator <bidirectional_iterator_tag, T> {
 
 		public:
 
-			typedef typename bidirectional_iterator<T>::reference		reference;
-			typedef typename bidirectional_iterator<T>::pointer			pointer;
-			typedef typename bidirectional_iterator<T>::difference_type	difference_type;
+			typedef T															value_type;
+			typedef typename bidirectional_iterator<T, Node>::reference			reference;
+			typedef typename bidirectional_iterator<T, Node>::pointer			pointer;
+			typedef typename bidirectional_iterator<T, Node>::difference_type	difference_type;
+			typedef Node *														ptr_node;
 
 		protected:
 
-			pointer	current;
+			ptr_node	current;
 
 		public:
 
 			bidirectional_iterator( void ) : current() {};
-			explicit bidirectional_iterator( pointer x ) : current(x) {};
-			bidirectional_iterator( const bidirectional_iterator &other ) : current(other.base()) {};
-			bidirectional_iterator &operator=( const bidirectional_iterator &other ) { current = other.base(); return *this; };
+			explicit bidirectional_iterator( ptr_node x ) : current(x) {};
+			bidirectional_iterator( const bidirectional_iterator &other ) : current(other.current) {};
+			bidirectional_iterator &operator=( const bidirectional_iterator &other ) { current = other.current; return *this; };
 			~bidirectional_iterator( void ) {};
 
-			pointer base( void ) const { return current; }
+			//pointer base( void ) const { return current->getKey(); }
 
-			reference operator*( void ) const { return *current; }
+			reference operator*( void ) const { return current->getKey() ; }
 			pointer operator->( void ) const { return &(operator*()); }
 
-			reference operator[]( difference_type __n ) const { return *(*this + __n); }
-
-			bidirectional_iterator &operator++( void ) { ++current; return *this; }
+			bidirectional_iterator &operator++( void ) {
+				if ( !current || current == max(root())) {
+					current = NULL;
+					return *this;
+				}
+				current = successor(current);
+				return *this;
+			}
 			bidirectional_iterator operator++( int ) { bidirectional_iterator __tmp(*this); ++current; return __tmp; }
-			bidirectional_iterator &operator+=( difference_type __n ) { current += __n; return *this; }
-			bidirectional_iterator operator+( difference_type __n ) const { return bidirectional_iterator(current + __n); }
-			bidirectional_iterator &operator--( void ) { --current; return *this; }
+			
+			bidirectional_iterator &operator--( void ) { 
+				if ( !current ) {
+					current = max(root());
+					return *this;
+				}
+				current = predecessor(current);
+				return *this;
+			}
 			bidirectional_iterator operator--( int ) { bidirectional_iterator __tmp(*this); --current; return __tmp; }
-			bidirectional_iterator &operator-=( difference_type __n ) { current -= __n; return *this; }
-			bidirectional_iterator operator-( difference_type __n ) const { return bidirectional_iterator(current - __n); }
 
-			operator bidirectional_iterator<const T>( void ) const { return bidirectional_iterator<const T>(current); }
+			operator bidirectional_iterator<const T, Node>( void ) const { return bidirectional_iterator<const T, Node>(current); }
+
+		private:
+
+			ptr_node 			root( void ) {
+
+				ptr_node tmp = current;
+				while ( tmp->up() )
+					tmp = tmp->up();
+				return tmp;
+			}
+
+			ptr_node 			min( ptr_node node ) {
+
+				while ( node->left() )
+					node = node->left();
+				return node;
+			}
+
+			ptr_node 			max( ptr_node node ) {
+
+				while ( node->right() )
+					node = node->right();
+				return (node);
+			}
+
+			ptr_node 			successor( ptr_node node ) {
+
+				if ( !node->right() )
+					return (min(node->right()));
+				ptr_node tmp = node->up();
+				while ( tmp && node == tmp->right()) {
+					node = tmp;
+					tmp = tmp->up();
+				}
+				return tmp;
+			}
+
+			ptr_node 			predecessor( ptr_node node ) {
+
+				if ( node->left() )
+					return (max(node->left()));
+				ptr_node tmp = node->up();
+				while ( tmp && node == tmp->left() )
+				{
+					node = tmp;
+					tmp = tmp->up();
+				}
+				return tmp;
+			}
+
 
 	}; /* class bidirectional_iterator */
 
-	template <class Iter1, class Iter2>
-	bool operator==(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() == y.base(); }
+	template <class T, class Node>
+	bool operator==(const bidirectional_iterator<T, Node>& x, const bidirectional_iterator<T, Node>& y) { return *x == *y; }
 
-	template <class Iter1, class Iter2>
-	bool operator<(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() < y.base(); }
+	template <class Iter1, class Iter2, class Node>
+	bool operator==(const bidirectional_iterator<Iter1, Node>& x, const bidirectional_iterator<Iter2, Node>& y) { return *x == *y; }
 
-	template <class Iter1, class Iter2>
-	bool operator>(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() > y.base(); }
+	template <class T, class Node>
+	bool operator!=(const bidirectional_iterator<T, Node>& x, const bidirectional_iterator<T, Node>& y) { return *x != *y; }
 
-	template <class Iter1, class Iter2>
-	bool operator!=(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() != y.base(); }
+	template <class Iter1, class Iter2, class Node>
+	bool operator!=(const bidirectional_iterator<Iter1, Node>& x, const bidirectional_iterator<Iter2, Node>& y) { return *x != *y; }
 
-	template <class Iter1, class Iter2>
-	bool operator<=(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() <= y.base(); }
-
-	template <class Iter1, class Iter2>
-	bool operator>=(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() >= y.base(); }
-
-	template<typename T>
-	typename bidirectional_iterator<T>::difference_type operator-(const bidirectional_iterator<T> &x, const bidirectional_iterator<T> &y) { return x.base() - y.base(); }
-
-	template <class Iter1, class Iter2>
-	typename bidirectional_iterator<Iter1>::difference_type operator-(const bidirectional_iterator<Iter1>& x, const bidirectional_iterator<Iter2>& y) { return x.base() - y.base(); }
-
-	template<typename T>
-	bidirectional_iterator<T> operator+(typename bidirectional_iterator<T>::difference_type __n, const bidirectional_iterator<T> &i) { return i + __n; }
 
 } /* namespace ft */
 

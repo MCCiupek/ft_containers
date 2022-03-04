@@ -15,8 +15,8 @@ namespace ft
 		typedef T1 first_type;
 		typedef T2 second_type;
 
-		T1 first;
-		T2 second;
+		first_type first;
+		second_type second;
 
 		pair() : first(), second() {};
 		pair( const T1& x, const T2& y ) : first(x), second(y) {};
@@ -25,15 +25,17 @@ namespace ft
 		pair( const pair<U1, U2>& p ) : first(p.first), second(p.second) {};
 
 		pair& operator=(pair const& p) {
-			first = p.first;
-			second = p.second;
+			if ( this != &p ) {
+				this->first = p.first;
+				this->second = p.second;
+			}
 			return *this;
 		}
 
 	}; /* pair */
 
 	template< class T1, class T2 >
-	std::pair<T1,T2> make_pair( T1 x, T2 y ) { return pair<T1, T2>(x, y); };
+	ft::pair<T1,T2> make_pair( T1 x, T2 y ) { return pair<T1, T2>(x, y); };
 
 
 	template <class T1, class T2>
