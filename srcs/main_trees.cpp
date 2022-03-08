@@ -155,6 +155,7 @@ void rand_rbt( int lngth ) {
 	
 	for(int i = 0; i < lngth; ++i)
 		brt.insert(rand() % (lngth * 5) + 1);
+	
 	std::cout << brt << std::endl;
 
 	std::cout << "min = " << *brt.min() << std::endl;
@@ -178,7 +179,7 @@ int		main( int argc, char * argv[])
 	if ( argc > 1 )
 		rand_rbt(std::atoi(argv[1]));
 
-	TESTED_NAMESPACE::map<int, std::string> mymap;
+	//TESTED_NAMESPACE::map<int, std::string> mymap;
 
 	return 0;
 }

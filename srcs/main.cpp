@@ -18,7 +18,7 @@
 
 #define TESTED_TYPE int
 #define T_SIZE_TYPE typename TESTED_NAMESPACE::vector<T>::size_type
-
+#define _pair TESTED_NAMESPACE::pair
 
 // --- Class foo
 template <typename T>
@@ -78,9 +78,9 @@ template <typename T>
 std::string	printPair(const T &iterator, bool nl = true, std::ostream &o = std::cout)
 {
 	o << "key: " << iterator->first << " | value: " << iterator->second;
-	if (nl)
+	if ( nl )
 		o << std::endl;
-	return ("");
+	return "";
 }
 
 template <typename T_MAP>
@@ -92,8 +92,9 @@ void	printSize(T_MAP const &mp, bool print_content = 1)
 	{
 		typename T_MAP::const_iterator it = mp.begin(), ite = mp.end();
 		std::cout << std::endl << "Content is:" << std::endl;
-		for (; it != ite; ++it)
+		for (; it != ite; ++it) {
 			std::cout << "- " << printPair(it, false) << std::endl;
+		}
 	}
 	std::cout << "###############################################" << std::endl;
 }
@@ -111,26 +112,52 @@ void	printReverse(TESTED_NAMESPACE::map<T1, T2> &mp)
 	std::cout << "_______________________________________________" << std::endl;
 }
 
-
 #define T1 int
-#define T2 foo<int>
-typedef TESTED_NAMESPACE::map<T1, T2>::value_type T3;
-typedef TESTED_NAMESPACE::map<T1, T2>::iterator ft_iterator;
-typedef TESTED_NAMESPACE::map<T1, T2>::const_iterator ft_const_iterator;
-
-//static int iter = 0;
+#define T2 int
+typedef _pair<const T1, T2> T3;
 
 int		main(void)
 {
 	std::list<T3> lst;
-	unsigned int lst_size = 10;
-
+	unsigned int lst_size = 7;
 	for (unsigned int i = 0; i < lst_size; ++i)
-		lst.push_back(T3(i + 1, (i + 1) * 3));
+		lst.push_back(T3(lst_size - i, i));
+
+	TESTED_NAMESPACE::map<T1, T2> m;
+
+	//m.print();
 
 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
-	printSize(mp);
+	TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.begin(), ite = mp.end();
 
+	TESTED_NAMESPACE::map<T1, T2> mp_range(it, --(--ite));
+	for (int i = 0; it != ite; ++it)
+		it->second = ++i * 5;
+
+	it = mp.begin(); ite = --(--mp.end());
+	TESTED_NAMESPACE::map<T1, T2> mp_copy(mp);
+	for (int i = 0; it != ite; ++it)
+		it->second = ++i * 7;
+
+	std::cout << "\t-- PART ONE --" << std::endl;
+	printSize(mp);
+	printSize(mp_range);
+	printSize(mp_copy);
+
+	mp.print();
+	// mp_copy.print();
+	// mp_range.print();
+
+	mp = mp_copy;
+
+	std::cout << "hi" << std::endl; 
+
+	mp_copy = mp_range;
+	mp_range.clear();
+
+	std::cout << "\t-- PART TWO --" << std::endl;
+	printSize(mp);
+	printSize(mp_range);
+	printSize(mp_copy);
 	return (0);
 }
-
