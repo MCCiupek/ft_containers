@@ -34,8 +34,8 @@ namespace ft
 			typedef Key										key_type;
 			typedef T										mapped_type;
 			typedef ft::pair<const Key, T>					value_type;
-			typedef size_t									size_type;
-			typedef ptrdiff_t								difference_type;
+			typedef std::size_t									size_type;
+			typedef std::ptrdiff_t								difference_type;
 			typedef Compare									key_compare;
 			typedef Allocator								allocator_type;
 			typedef value_type&								reference;
@@ -112,9 +112,11 @@ namespace ft
 			 */
 			map& operator= (const map & other) { 
 				if ( this != &other ) {
-					this->~map();
-					_tree = RedBlackTree<value_type, value_compare>(value_compare(key_compare()));
-					_alloc = other._alloc;
+					clear();
+					//std::cout << "delte ok" << std::endl;
+					//std::cout << _tree << std::endl;
+					//_tree = RedBlackTree<value_type, value_compare>(value_compare(key_compare()));
+					//_alloc = other._alloc;
 					insert(other.begin(), other.end());
 				}
 				return *this; };
@@ -232,38 +234,33 @@ namespace ft
 			{
 				const_iterator it;
 
-				for ( it = begin(); it != end(); ++it )
-					if ( !value_comp()(*it, ft::make_pair(k, mapped_type())))
+				for ( it = begin(); it != end(); ++it ) {
+					if ( !value_comp()(*it, ft::make_pair(k, mapped_type())) )
 						break;
+				}
 				return it;
 			}
 
 			iterator upper_bound( const key_type &k )
 			{
-				key_compare	mycomp = key_comp();
-				key_type	highest = rbegin()->first;
+				iterator it;
 
-				iterator it = begin();
-				while ( mycomp((*it).first, highest) ) {
-					if (it->first > k)
-						return it;
-					it++;
+				for ( it = begin(); it != end(); ++it ) {
+					if ( value_comp()(ft::make_pair(k, mapped_type()), *it))
+						break;
 				}
-				return ++it;
+				return it;
 			}
 
 			const_iterator upper_bound( const key_type &k ) const
 			{
-				key_compare	mycomp = key_comp();
-				key_type	highest = rbegin()->first;
+				const_iterator it;
 
-				const_iterator it = begin();
-				while ( mycomp((*it).first, highest) ) {
-					if (it->first > k)
-						return it;
-					it++;
+				for ( it = begin(); it != end(); ++it ) {
+					if ( value_comp()(ft::make_pair(k, mapped_type()), *it))
+						break;
 				}
-				return ++it;
+				return it;
 			}
 
 			ft::pair<const_iterator, const_iterator>	equal_range( const key_type &k ) const {

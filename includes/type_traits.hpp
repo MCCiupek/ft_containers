@@ -3,6 +3,8 @@
 
 # pragma once
 # include <iostream>
+# include <stdint.h>
+# include <uchar.h>
 
 namespace ft
 {
@@ -27,8 +29,8 @@ namespace ft
     template <> struct _is_integral<char> { static const bool value = true; };
     template <> struct _is_integral<unsigned char> { static const bool value = true; };
     template <> struct _is_integral<wchar_t> { static const bool value = true; };
-    template <> struct _is_integral<char16_t> { static const bool value = true; };
-    template <> struct _is_integral<char32_t> { static const bool value = true; };
+    //template <> struct _is_integral<char16_t> { static const bool value = true; };
+    //template <> struct _is_integral<char32_t> { static const bool value = true; };
     template <> struct _is_integral<short> { static const bool value = true; };
     template <> struct _is_integral<unsigned short> { static const bool value = true; };
     template <> struct _is_integral<int> { static const bool value = true; };

@@ -166,6 +166,8 @@ void rand_rbt( int lngth ) {
 
 int		main( int argc, char * argv[])
 {
+	(void)argc;
+	(void)argv;
 	//basic_node();
 
 	//basic_tree();
@@ -174,10 +176,10 @@ int		main( int argc, char * argv[])
 
 	//classic_tree();
 
-	//classic_rbt();
+	classic_rbt();
 
-	if ( argc > 1 )
-		rand_rbt(std::atoi(argv[1]));
+	//if ( argc > 1 )
+	//	rand_rbt(std::atoi(argv[1]));
 
 	//TESTED_NAMESPACE::map<int, std::string> mymap;
 

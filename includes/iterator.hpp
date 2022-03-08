@@ -29,7 +29,7 @@ namespace ft
 
 	template<class T>
 	struct iterator_traits<T*> {
-		typedef ptrdiff_t								difference_type;
+		typedef std::ptrdiff_t								difference_type;
 		typedef T										value_type;
 		typedef T*										pointer;
 		typedef T&										reference;
@@ -38,7 +38,7 @@ namespace ft
 
 	template<class T>
 	struct iterator_traits<const T*> {
-		typedef ptrdiff_t								difference_type;
+		typedef std::ptrdiff_t								difference_type;
 		typedef T										value_type;
 		typedef const T*								pointer;
 		typedef const T&								reference;
@@ -268,15 +268,7 @@ namespace ft
 		public:
 
 			bidirectional_iterator( void ) : current(), _null(), _root() {};
-			explicit bidirectional_iterator( ptr_node x, ptr_node null, ptr_node root ) : current(x), _null(null), _root(root) {
-				// if (x)
-				// 	std::cout << "bidirectional_iterator(x)" << std::endl;
-				// if ( !x ) {
-				// 	std::cout << "NULL bidirectional_iterator(x)" << std::endl;
-				// 	current = ptr_node();
-				// }
-				//std::cout << x->getKey() << std::endl;
-			};
+			explicit bidirectional_iterator( ptr_node x, ptr_node null, ptr_node root ) : current(x), _null(null), _root(root) {};
 			bidirectional_iterator( const bidirectional_iterator &other ) : current(other.current), _null(other._null), _root(other._root) {};
 			bidirectional_iterator &operator=( const bidirectional_iterator &other ) { current = other.current; _null = other._null; _root = other._root; return *this; };
 			~bidirectional_iterator( void ) {};

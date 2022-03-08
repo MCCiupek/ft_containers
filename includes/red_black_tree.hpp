@@ -87,17 +87,62 @@ class Node {
 
 		void			swap( pointer & other ) {
 
+			pointer	tmp = other;
 			pointer tmp_up = other->up();
 			pointer tmp_right = other->right();
 			pointer tmp_left = other->left();
 
-			other->up() = up();
-			other->right() = right();
-			other->left() = left();
+			if ( other->right() && other->right() != this )
+				other->right()->up() = this;
+				
+			if ( other->left() && other->left() != this )
+				other->left()->up() = this;
+			
+			if ( other->up() && other->up() != this ) {
+				if ( other->up()->right() == other )
+					other->up()->right() = this;
+				if ( other->up()->left() == other )
+					other->up()->left() = this;
+			}
 
-			up() = tmp_up;
-			right() = tmp_right;
-			left() = tmp_left;
+			if ( this->right() && this->right() != tmp )
+				this->right()->up() = tmp;
+			
+			if ( this->left() && this->left() != tmp )
+				this->left()->up() = tmp;
+			
+			if ( this->up() && this->up() != tmp ) {
+				if ( this->up()->right() == this )
+					this->up()->right() = tmp;
+				if ( this->up()->left() == this )
+					this->up()->left() = tmp;
+			}
+
+			if ( up() != other )
+				other->up() = up();
+			else
+				other->up() = this;
+			if ( right() != other )
+				other->right() = right();
+			else
+				other->right() = this;
+			if ( left() != other )
+				other->left() = left();
+			else
+				other->left() = this;
+
+			if ( tmp_up != this )
+				up() = tmp_up;
+			else
+				up() = other;
+			if ( tmp_right != this )
+				right() = tmp_right;
+			else
+				right() = other;
+			if ( tmp_left != this )
+				left() = tmp_left;
+			else
+				left() = other;
 		}
 
 }; /* class Node */
@@ -107,6 +152,13 @@ std::ostream & operator<<( std::ostream &os, const Node<T, Compare> & node ) {
 	os << std::setw(4) << node.getKey() << std::setw(4) << " " << std::endl;
 	os << ARROWS << std::endl;
 	return os;
+}
+
+template <class T, class Compare>
+void swap(Node<T, Compare> ** a, Node<T, Compare> ** b) {
+	Node<T, Compare> tmp = *a;
+	*a = *b;
+	*b = tmp;
 }
 
 template <class T, class Compare>
@@ -138,9 +190,8 @@ class BinarySearchTree {
 	public:
 
 		BinarySearchTree( value_compare const & cmp = value_compare() ) : _root(NULL), _cmp(cmp) {
+			//std::cout << "construct & allocate _null" << std::endl;
 			_null = _alloc.allocate(1);
-			std::cout << "allocate" << " ";
-			std::cout << "construct" << std::endl;
 			_alloc.construct(_null, Node());
 			_root = _null;
 		};
@@ -152,19 +203,22 @@ class BinarySearchTree {
 			}
 			return *this;
 		};
-		virtual ~BinarySearchTree() { clear(); };
+		virtual ~BinarySearchTree() { 
+			clear();
+			_alloc.destroy(_root);
+			_alloc.deallocate(_root, 1);
+		};
 
 	private:
 
 		Node * rinsert( Node * node, value_type key, Node * prev=NULL ) { 
-			if ( !node || node == _null ) {					
-				Node * new_node = allocator_type().allocate(1);
-				std::cout << "allocate" <<  " ";
-				std::cout << "construct" << std::endl;
+			if ( !node || node == _null ) {
+				//std::cout << "construct & allocate " << node->getKey().first << std::endl;
+				Node * new_node = _alloc.allocate(1);
 				if ( !prev )
-					allocator_type().construct(new_node, Node(key));
+					_alloc.construct(new_node, Node(key));
 				else
-					allocator_type().construct(new_node, Node(key, *prev));
+					_alloc.construct(new_node, Node(key, *prev));
 				new_node->right() = _null;
 				new_node->left() = _null;
 				_null->up() = new_node;
@@ -178,35 +232,21 @@ class BinarySearchTree {
 		}
 
 		Node * rremove( Node * node, value_type key ) { 
-			if ( !node || node == _null )
-				return _null;
+			if ( node == _null ) {
+				//std::cout << "destroy & deallocate _null ?" << std::endl;
+				return NULL;
+			}
+			//std::cout << "node " << node->getKey() << " for " << key << std::endl;
 			if ( key < node->getKey() )
 			 	node->left() = rremove(node->left(), key);
 			else if ( key > node->getKey() )
 			 	node->right() = rremove(node->right(), key);
 			else {
-				if ( node->left() != _null && node->right() != _null ) {
-					Node * _tmp = node->right();
-					while ( _tmp->left() != _null )
-						_tmp = _tmp->left();
-					node->swap(_tmp);
-					node->right() = rremove(node->right(), key);
-				}
-				else if ( node->left() == _null && node->right() == _null ) {
-					std::cout << "destroy " << std::endl;
-					allocator_type().destroy(node->left());
-					allocator_type().deallocate(node->left(), 1);
-					std::cout << *this << std::endl;
-					std::cout << "destroy" << std::endl;
-					allocator_type().destroy(node->right());
-					allocator_type().deallocate(node->right(), 1);
-					// std::cout << *this << std::endl;
-					// std::cout << "destroy deallocate node " << node->getKey().first << " ";
-					// allocator_type().destroy(node);
-					// allocator_type().deallocate(node, 1);
-					node = _null;
-					std::cout << *this << std::endl;
-					//return _null;
+				if ( node->left() == _null && node->right() == _null ) {
+					//std::cout << "destroy & deallocate " << node->getKey().first << std::endl;
+					_alloc.destroy(node);
+					_alloc.deallocate(node, 1);
+					return _null;
 				}
 				else if ( node->left() != _null && node->right() == _null ) {
 					node = rremove(node->left(), key);
@@ -235,20 +275,20 @@ class BinarySearchTree {
 
 		void rdelete( Node * node ) {
 			if ( node != _null ) {
-				remove(node->getKey());
 				rdelete(node->left());
 				rdelete(node->right());
+				remove(node->getKey());
 			}
 		}
 
 		Node * rmin( Node * node ) const {
-			if ( node->left() == _null )
+			if ( !node->left() || node->left() == _null )
 				return node;
 			return rmin(node->left());
 		}
 
 		Node * rmax( Node * node ) const {
-			if ( node->right() == _null )
+			if ( !node->right() || node->right() == _null )
 				return node;
 			return rmax(node->right());
 		}
@@ -268,11 +308,11 @@ class BinarySearchTree {
 			if ( node != NULL ) {
 				
 				std::cout << prefix + (isLeft ? "├──" : "└──" );
-				//std::cout << (node->getColor() == RED ? CRED : CBLACK) << node->getKey() << CRESET << std::endl;
 				if ( node  == _null )
-					std::cout << (node->getColor() == RED ? CRED : CBLACK) << "NULL" << CRESET << std::endl;
+					std::cout << (node->getColor() == RED ? CRED : CRESET) << "NULL" << CRESET << std::endl;
 				else
-					std::cout << (node->getColor() == RED ? CRED : CBLACK) << node->getKey().first << CRESET << std::endl;
+					//std::cout << (node->getColor() == RED ? CRED : CRESET) << node->getKey() << CRESET << std::endl;
+					std::cout << (node->getColor() == RED ? CRED : CRESET) << node->getKey().first << CRESET << std::endl;
 				rprint_tree(node->left(), true, prefix + (isLeft ? "│   " : "    "));
 				rprint_tree(node->right(), false, prefix + (isLeft ? "│   " : "    "));
 			}
@@ -280,18 +320,32 @@ class BinarySearchTree {
 
 	public:
 
-		void	insert( value_type key ) { _root = rinsert(_root, key); }
-		void	remove( value_type key ) { _root = rremove(_root, key); }
-		Node *	search( value_type key ) { return rsearch(_root, key); }
-		void	print_keys( void ) const { rprint_keys(_root); }
-		void	print_tree( void ) const { rprint_tree(_root); }
-		Node *	min( void ) const { return rmin(_root); }
-		Node *	max( void ) const { return rmax(_root); }
-		Node *	root( void ) const { return _root; }
-		Node *	end( void ) const { return _null; }
+		void		insert( value_type key ) { _root = rinsert(_root, key); }
+		void		remove2( value_type key ) { _root = rremove(_root, key); }
+		void		remove( value_type key ) {
+			Node * to_remove = search(key);
+			if ( !to_remove || to_remove == _null )
+				return;
+			if ( to_remove->right() != _null && to_remove->left() != _null ) {
+				Node * _tmp = rmin(to_remove->right());
+				to_remove->swap(_tmp);
+				if ( this->_root == to_remove )
+					this->_root = _tmp;
+				_tmp->right() = rremove(_tmp->right(), key);
+				return;
+			}
+			_root = rremove(_root, key);
+		}
+		Node *		search( value_type key ) { return rsearch(_root, key); }
+		void		print_keys( void ) const { rprint_keys(_root); }
+		void		print_tree( void ) const { rprint_tree(_root); }
+		Node *		min( void ) const { return rmin(_root); }
+		Node *		max( void ) const { return rmax(_root); }
+		Node *		root( void ) const { return _root; }
+		Node *		end( void ) const { return _null; }
 		size_type	size( void ) const { return rsize(_root); }
 		size_type	max_size( void ) const { return _alloc.max_size(); }
-		void	clear( void ) { rdelete(_root); _root->setColor(RED); }
+		void		clear( void ) { rdelete(_root); }
 		
 
 }; /* class BinarySearchTree */

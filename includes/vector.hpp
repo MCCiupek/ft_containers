@@ -101,14 +101,14 @@ namespace ft
 			 *	Constructs an empty container, with no elements.
 			 */
 			explicit vector( const Allocator& alloc = Allocator() ) : 
-				__begin_(nullptr), __end_(nullptr), __end_cap_(nullptr, alloc) {};
+				__begin_(NULL), __end_(NULL), __end_cap_(NULL, alloc) {};
 
 			/**
 			 *	Fill constructor
 			 *	Constructs a container with @param count elements. Each element is a copy of @param value.
 			 */
 			explicit vector( size_type count, const T& value = T(), const Allocator& alloc = Allocator() ) : 
-				__begin_(nullptr), __end_(nullptr), __end_cap_(nullptr, alloc)
+				__begin_(NULL), __end_(NULL), __end_cap_(NULL, alloc)
 			{
 				v_allocate(count);
 				value_init(__begin_, count, value);
@@ -122,7 +122,7 @@ namespace ft
 			template <class InputIt>
 			vector( InputIt first, InputIt last, const Allocator& alloc = Allocator(),
 				typename enable_if<!ft::is_integral<InputIt>::value>::type* = 0 ) :
-					__begin_(nullptr), __end_(nullptr), __end_cap_(nullptr, alloc)
+					__begin_(NULL), __end_(NULL), __end_cap_(NULL, alloc)
 			{
 				difference_type n = ft::distance(first, last);
 				v_allocate(n);
@@ -134,7 +134,7 @@ namespace ft
 			 *  Constructs a container with a copy of each of the elements in @param other, in the same order.
 			 */
 			vector( const vector& other ) :
-				__begin_(nullptr), __end_(nullptr), __end_cap_(nullptr, other.get_allocator())
+				__begin_(NULL), __end_(NULL), __end_cap_(NULL, other.get_allocator())
 			{
 				v_allocate(other.size());
 				range_init(__begin_, other.begin(), other.end());
