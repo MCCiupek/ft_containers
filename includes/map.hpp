@@ -61,10 +61,10 @@ namespace ft
 					}
 			};
 
-			typedef ft::bidirectional_iterator<value_type, Node<value_type, value_compare> > iterator;
-			typedef ft::bidirectional_iterator<value_type, Node<value_type, value_compare> >	const_iterator;
-			typedef ft::reverse_iterator<iterator>			reverse_iterator;
-			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+			typedef ft::bidirectional_iterator<value_type, Node<value_type, value_compare> >	iterator;
+			typedef ft::bidirectional_iterator<const value_type, Node<value_type, value_compare> >	const_iterator;
+			typedef ft::reverse_iterator<iterator>												reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>										const_reverse_iterator;
 
 		private:
 
@@ -129,7 +129,8 @@ namespace ft
 			/* ------------------------------------------------------------- */
 			/* ----------------------- ELEMENT ACCESS ---------------------- */
 
-			mapped_type& operator[] ( const key_type& k ) { return (*((this->insert(ft::make_pair(k, mapped_type()))).first)).second; };
+			mapped_type& operator[] ( const key_type& k )
+				{ return ( *((this->insert(ft::make_pair(k, mapped_type()))).first)).second; };
 
 			/* ------------------------------------------------------------- */
 			/* ------------------------- ITERATORS ------------------------- */
@@ -179,13 +180,17 @@ namespace ft
 				}
 			}
 
-			void	erase( iterator position ) { erase(position->first); }
+			void	erase( iterator position ) { _tree.remove(*position); }
 
-			size_type	erase( const key_type & key ) {
+			size_type erase ( const key_type & k ) {
 				size_type old_size = size();
-				_tree.remove(key);
-				return old_size != size();
-			}
+				//std::cout << "remove " << k << std::endl;
+				iterator to_remove = find(k);
+				// std::cout << "item " << (*to_remove).first << std::endl;
+				erase(to_remove);
+				//std::cout << "deleted: " << old_size - size() << std::endl;
+				return old_size - size();
+			};
 
 			void	erase( iterator first, iterator last ) {
 				while (first != last) {
@@ -194,7 +199,7 @@ namespace ft
 				}
 			}
 
-			void	swap( map &x ) {/* _tree.swap(x._tree);*/ (void)x; } /* TODO */
+			void	swap( map &x ) { _tree.swap(x._tree); } /* TODO */
 
 			void	clear( void ) { _tree.clear(); }
 
@@ -208,11 +213,11 @@ namespace ft
 			/* ------------------------------------------------------------- */
 			/* ------------------------ OPERATIONS ------------------------- */
 
-			iterator	find( const key_type &k ) 
+			iterator	find( const key_type & k )
 				{ return iterator(_tree.search(ft::make_pair(k, mapped_type())), _tree.end(), _tree.root()); }
 
-			const_iterator	find(const key_type & k) const 
-				{ return iterator(_tree.search(ft::make_pair(k, mapped_type())), _tree.end(), _tree.root()); }
+			const_iterator	find( const key_type & k ) const 
+				{ return const_iterator(_tree.search(ft::make_pair(k, mapped_type())), _tree.end(), _tree.root()); }
 
 			size_type	count( const key_type &k ) const {
 				if ( find(k) == end() )
@@ -275,6 +280,43 @@ namespace ft
 			// AUTRES (A SUPPRIMER)
 			void print( void ) { std::cout << _tree << std::endl; }
 	};
+
+	template <typename T1, typename T2>
+	bool operator== (const map<T1, T2>& lhs, const map<T1, T2>& rhs) {
+		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	};
+
+	template <typename T1, typename T2>
+	bool operator!= (const map<T1, T2>& lhs, const map<T1, T2>& rhs) {
+		return (!(lhs == rhs));
+	};
+
+	template <typename T1, typename T2>
+	bool operator<  (const map<T1, T2>& lhs, const map<T1, T2>& rhs) {
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	};
+
+	template <typename T1, typename T2>
+	bool operator<= (const map<T1, T2>& lhs, const map<T1, T2>& rhs) {
+		return (!(rhs < lhs));
+	};
+
+	template <typename T1, typename T2>
+	bool operator>  (const map<T1, T2>& lhs, const map<T1, T2>& rhs) {
+		return (rhs < lhs);
+	};
+
+	template <typename T1, typename T2>
+	bool operator>= (const map<T1, T2>& lhs, const map<T1, T2>& rhs) {
+		return (!(lhs < rhs));
+	};
+
+	template <typename T1, typename T2>
+	void swap (const map<T1, T2>& x, const map<T1, T2>& y) {
+		return x.swap(y);
+	};
+
+
 }
 
 #endif

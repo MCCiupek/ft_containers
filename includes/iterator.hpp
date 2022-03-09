@@ -274,19 +274,28 @@ namespace ft
 			~bidirectional_iterator( void ) {};
 
 			pointer base( void ) const { return &(current->getKey()); }
+			// const pointer base( void ) const { return &(current->getKey()); }
 
 			reference operator*( void ) const { return *base(); }
+			// const reference operator*( void ) const { return *base(); }
 			pointer operator->( void ) const { return &(operator*()); }
+			// const pointer operator->( void ) const { return &(operator*()); }
 
 			bidirectional_iterator &operator++( void ) {
-				if ( current == _null || current == max(_root)) {
+				if ( current == max(_root)) {
+					current = _null;
+					return *this;
+				}
+				if ( current == _null ) {
 					current = _null;
 					return *this;
 				}
 				current = successor(current);
 				return *this;
 			}
-			bidirectional_iterator operator++( int ) { bidirectional_iterator __tmp(*this); ++current; return __tmp; }
+
+			bidirectional_iterator operator++( int ) { bidirectional_iterator __tmp(*this); operator++(); return __tmp; }
+			// const bidirectional_iterator operator++( int ) const { const bidirectional_iterator __tmp(*this); operator++(); return __tmp; }
 			
 			bidirectional_iterator &operator--( void ) { 
 				if ( !current ) {
@@ -300,9 +309,10 @@ namespace ft
 				current = predecessor(current);
 				return *this;
 			}
-			bidirectional_iterator operator--( int ) { bidirectional_iterator __tmp(*this); --current; return __tmp; }
+			bidirectional_iterator operator--( int ) { bidirectional_iterator __tmp(*this); operator--(); return __tmp; }
+			// const bidirectional_iterator operator--( int ) const { const bidirectional_iterator __tmp(*this); operator--(); return __tmp; }
 
-			operator bidirectional_iterator<const T, Node>( void ) const { return bidirectional_iterator<const T, Node>(current); }
+			operator bidirectional_iterator<const T, Node>( void ) const { return bidirectional_iterator<const T, Node>(current, _null, _root); }
 
 		private:
 
