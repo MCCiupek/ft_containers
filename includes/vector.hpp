@@ -13,7 +13,9 @@ namespace ft
 	template < class T, class Allocator = std::allocator<T> >
 	class vector
 	{
-		
+		/* ------------------------------------------------------------- */
+		/* -------------------------- ALIASES -------------------------- */
+
 		public:
 
 			typedef T												value_type;
@@ -94,6 +96,9 @@ namespace ft
 				return (idx);
 			}
 		
+		/* ------------------------------------------------------------- */
+		/* ---------------- CONSTRUCTORS & DESTRUCTOR ------------------ */
+
 		public:
 
 			/**
@@ -121,7 +126,7 @@ namespace ft
 			 */
 			template <class InputIt>
 			vector( InputIt first, InputIt last, const Allocator& alloc = Allocator(),
-				typename enable_if<!ft::is_integral<InputIt>::value>::type* = 0 ) :
+				typename ft::enable_if<!ft::is_integral<InputIt>::value>::type* = 0 ) :
 					__begin_(NULL), __end_(NULL), __end_cap_(NULL, alloc)
 			{
 				difference_type n = ft::distance(first, last);
@@ -223,28 +228,24 @@ namespace ft
 				if (!empty())
         			return *begin();
 				return *end();
-				// ERR: "front() called for empty vector"
 			};
 
 			const_reference front() const {
 				if (!empty())
         			return *begin();
 				return *end();
-				// ERR: "front() called for empty vector"
 			};
 
 			reference back() {
 				if (!empty())
         			return *(end() - 1);
 				return *end();
-				// ERR: "back() called for empty vector"
 			};
 
 			const_reference back() const {
 				if (!empty())
         			return *(end() - 1);
 				return *end();
-				// ERR: "back() called for empty vector"
 			};
 
 			/* ------------------------------------------------------------- */
@@ -252,7 +253,7 @@ namespace ft
 
 			template <class InputIterator>
 			void assign (InputIterator first, InputIterator last,
-				typename enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
+				typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
 				difference_type size = ft::distance(first, last);
 
 				clear();
@@ -284,7 +285,7 @@ namespace ft
 
 			template <class InputIterator>
 			void insert (iterator position, InputIterator first, InputIterator last,
-				typename enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
+				typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
 				difference_type size = ft::distance(first, last);
 				range_init(insert_shared(position.base(), size) + __begin_, first, last);
 			};

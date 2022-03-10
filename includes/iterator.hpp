@@ -3,6 +3,7 @@
 
 # pragma once
 # include <iostream>
+# include "type_traits.hpp"
 
 namespace ft
 {
@@ -91,9 +92,9 @@ namespace ft
 		}; /* next */
 
 	template <class BidirectionalIterator>
-	// TODO: Enable if bidirectional iterator
 	BidirectionalIterator prev( BidirectionalIterator x,
-		typename iterator_traits<BidirectionalIterator>::difference_type n = 1 ) {
+		typename iterator_traits<BidirectionalIterator>::difference_type n = 1,
+		typename ft::enable_if<BidirectionalIterator::iterator_category == BidirectionalIterator::bidirectional_iterator_tag>::type* = 0 ) {
 			if (n >= 0)
 				advance(x, -n);
 			return x;
@@ -274,12 +275,9 @@ namespace ft
 			~bidirectional_iterator( void ) {};
 
 			pointer base( void ) const { return &(current->getKey()); }
-			// const pointer base( void ) const { return &(current->getKey()); }
-
+			
 			reference operator*( void ) const { return *base(); }
-			// const reference operator*( void ) const { return *base(); }
 			pointer operator->( void ) const { return &(operator*()); }
-			// const pointer operator->( void ) const { return &(operator*()); }
 
 			bidirectional_iterator &operator++( void ) {
 				if ( current == max(_root)) {
@@ -295,7 +293,6 @@ namespace ft
 			}
 
 			bidirectional_iterator operator++( int ) { bidirectional_iterator __tmp(*this); operator++(); return __tmp; }
-			// const bidirectional_iterator operator++( int ) const { const bidirectional_iterator __tmp(*this); operator++(); return __tmp; }
 			
 			bidirectional_iterator &operator--( void ) { 
 				if ( !current ) {
@@ -310,7 +307,6 @@ namespace ft
 				return *this;
 			}
 			bidirectional_iterator operator--( int ) { bidirectional_iterator __tmp(*this); operator--(); return __tmp; }
-			// const bidirectional_iterator operator--( int ) const { const bidirectional_iterator __tmp(*this); operator--(); return __tmp; }
 
 			operator bidirectional_iterator<const T, Node>( void ) const { return bidirectional_iterator<const T, Node>(current, _null, _root); }
 
@@ -369,7 +365,6 @@ namespace ft
 
 	template <class Iter1, class Iter2, class Node>
 	bool operator!=(const bidirectional_iterator<Iter1, Node>& x, const bidirectional_iterator<Iter2, Node>& y) { return x.base() != y.base(); }
-
 
 } /* namespace ft */
 

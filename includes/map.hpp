@@ -12,12 +12,6 @@
 
 namespace ft
 {
-	/**
-	* ------------------------------------------------------------- *
-	* ------------------------ FT::MAP ------------------------- *
-	* ------------------------------------------------------------- *
-	*/
-
 	template<
 		class Key,
 		class T,
@@ -34,8 +28,8 @@ namespace ft
 			typedef Key										key_type;
 			typedef T										mapped_type;
 			typedef ft::pair<const Key, T>					value_type;
-			typedef std::size_t									size_type;
-			typedef std::ptrdiff_t								difference_type;
+			typedef std::size_t								size_type;
+			typedef std::ptrdiff_t							difference_type;
 			typedef Compare									key_compare;
 			typedef Allocator								allocator_type;
 			typedef value_type&								reference;
@@ -66,10 +60,13 @@ namespace ft
 			typedef ft::reverse_iterator<iterator>												reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>										const_reverse_iterator;
 
-		private:
+		/* ------------------------------------------------------------- */
+		/* ------------------------- ATTRIBUTES ------------------------ */
 
-			RedBlackTree<value_type, value_compare>	_tree;
-			allocator_type							_alloc;
+		protected:
+
+			RedBlackTree<value_type, value_compare, allocator_type>	_tree;
+			allocator_type											_alloc;
 
 		/* ------------------------------------------------------------- */
 		/* ---------------- CONSTRUCTORS & DESTRUCTOR ------------------ */
@@ -113,10 +110,6 @@ namespace ft
 			map& operator= (const map & other) { 
 				if ( this != &other ) {
 					clear();
-					//std::cout << "delte ok" << std::endl;
-					//std::cout << _tree << std::endl;
-					//_tree = RedBlackTree<value_type, value_compare>(value_compare(key_compare()));
-					//_alloc = other._alloc;
 					insert(other.begin(), other.end());
 				}
 				return *this; };
@@ -129,8 +122,9 @@ namespace ft
 			/* ------------------------------------------------------------- */
 			/* ----------------------- ELEMENT ACCESS ---------------------- */
 
-			mapped_type& operator[] ( const key_type& k )
-				{ return ( *((this->insert(ft::make_pair(k, mapped_type()))).first)).second; };
+			mapped_type & operator[] ( const key_type& k ) {
+					_tree.insert(ft::make_pair(k, mapped_type()));
+					return (*find(k)).second; };
 
 			/* ------------------------------------------------------------- */
 			/* ------------------------- ITERATORS ------------------------- */
@@ -184,11 +178,8 @@ namespace ft
 
 			size_type erase ( const key_type & k ) {
 				size_type old_size = size();
-				//std::cout << "remove " << k << std::endl;
 				iterator to_remove = find(k);
-				// std::cout << "item " << (*to_remove).first << std::endl;
 				erase(to_remove);
-				//std::cout << "deleted: " << old_size - size() << std::endl;
 				return old_size - size();
 			};
 
@@ -199,7 +190,7 @@ namespace ft
 				}
 			}
 
-			void	swap( map &x ) { _tree.swap(x._tree); } /* TODO */
+			void	swap( map &x ) { _tree.swap(x._tree); }
 
 			void	clear( void ) { _tree.clear(); }
 
@@ -276,10 +267,15 @@ namespace ft
 				return ft::make_pair(this->lower_bound(k), this->upper_bound(k));
 			}
 
-
-			// AUTRES (A SUPPRIMER)
+			// OTHER (debug)
 			void print( void ) { std::cout << _tree << std::endl; }
-	};
+
+	}; // class map
+
+	/* ------------------------------------------------------------- */
+	/* ---------------- NON-MEMBER FUNCTION OVERLOAD --------------- */
+
+	/* 		Relational operators: */
 
 	template <typename T1, typename T2>
 	bool operator== (const map<T1, T2>& lhs, const map<T1, T2>& rhs) {
@@ -311,12 +307,13 @@ namespace ft
 		return (!(lhs < rhs));
 	};
 
+	/* 		Swap: */
+
 	template <typename T1, typename T2>
 	void swap (const map<T1, T2>& x, const map<T1, T2>& y) {
 		return x.swap(y);
 	};
 
+} // namespace ft
 
-}
-
-#endif
+#endif /* MAP_HPP */
