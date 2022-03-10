@@ -6,14 +6,22 @@
 #include "red_black_tree.hpp"
 #include <stdlib.h>
 
-#if 0
+// #include "vector.hpp"
+// #include "map.hpp"
+// #include <vector>
+// #include <map>
+
+#if TESTED_NAMESPACE_STD
 	#include <vector>
 	#include <map>
 	#define TESTED_NAMESPACE std
-#else
-	#include <vector.hpp>
-	#include <map.hpp>
+	#define TEST 0
+#endif
+#if TESTED_NAMESPACE_FT
+	#include "vector.hpp"
+	#include "map.hpp"
 	#define TESTED_NAMESPACE ft
+	#define TEST 1
 #endif
 
 #define TESTED_TYPE int
@@ -158,7 +166,6 @@ int		main(void)
 	mp[11] = "Hi there";
 	printSize(mp);
 
-	return (0);
 	ft_erase(mp, --(--(--mp.end())), mp.end());
 
 	mp[12] = "ONE";
@@ -167,6 +174,12 @@ int		main(void)
 	mp[15] = "FOUR";
 	printSize(mp);
 	ft_erase(mp, mp.begin(), mp.end());
+
+	if (TEST == 0)
+		std::cout << "std" << std::endl;
+	if (TEST == 1)
+		std::cout << "ft" << std::endl;
+	
 
 	return (0);
 }

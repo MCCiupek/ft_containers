@@ -34,9 +34,22 @@ SRC				=		main.cpp
 
 SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))
 
-OBJS			=		$(SRCS:.cpp=.o)
+# OBJS			=		$(SRCS:.cpp=.o)
+OBJS			=		main.o
 
-NAME			=		test
+OBJDIR_FT		=		./obj/ft/
+
+OBJDIR_STD		=		./obj/std/
+
+OBJS_FT			=		$(addprefix $(OBJDIR_FT),$(OBJS))
+
+OBJS_STD 		=		$(addprefix $(OBJDIR_STD),$(OBJS))
+
+NAME			=		containers
+
+NAME_FT			=		test_ft
+
+NAME_STD		=		test_std
 
 UNAME			:=		$(shell uname)
 
@@ -48,41 +61,44 @@ ifeq ($(UNAME),Linux)
 	OS = -D LINUX
 endif
 
-all:			$(NAME)
 
-$(NAME) :		echoCL $(OBJS) $(HEADERS) echoCS 
-				$(CC) $(FLAGS) $(OS) $(OBJS) -o $(NAME)
+all: echoCL_ft ft echoCS echoCL_std std echoCS
 
-san:			echoCLsan $(OBJS) $(HEADERS) echoCS
-				$(CC) $(FLAGS) $(FSANITIZE) $(OS) $(OBJS) -o $(NAME)
+$(OBJS_FT): $(OBJDIR_FT)%.o : $(SRCS)
+	$(CC) $(FLAGS) -D TESTED_NAMESPACE_FT -I $(DIR_HEADERS) -c $< -o $@
 
-%.o: %.cpp
-				$(CC) $(FLAGS) $(OS) -I $(DIR_HEADERS) -c $< -o $@
-				printf "$(GREEN)██"
+$(OBJS_STD): $(OBJDIR_STD)%.o : $(SRCS)
+	$(CC) $(FLAGS) -D TESTED_NAMESPACE_STD -I $(DIR_HEADERS) -c $< -o $@
 
-clean:			echoCLEAN
-				$(RM) $(OBJS)
+ft: $(OBJS_FT)
+	$(CC) $(FLAGS) -D TESTED_NAMESPACE_FT $< -o $(NAME_FT)
+	printf "$(GREEN)██"
 
-fclean:			clean
-				$(RM) $(NAME)
+std: $(OBJS_STD)
+	$(CC) $(FLAGS) -D TESTED_NAMESPACE_STD $< -o $(NAME_STD)
+	printf "$(GREEN)██"
 
-git:			fclean
-				git pull
-				git add .
-				git commit -m "$(shell date)"
-				git push
+clean: echoCLEAN
+	$(RM) $(OBJS_FT) $(OBJS_STD)
 
-re:				fclean all
+fclean: clean
+	$(RM) $(NAME) $(NAME_FT) $(NAME_STD)
 
-.PHONY:			all, clean, fclean, re, git, bonus, san
+git: fclean
+	git pull
+	git add .
+	git commit -m "$(shell date)"
+	git push
+
+re: fclean all
+
+.PHONY: all, clean, fclean, re, git, bonus, ft, std
 
 .SILENT:
 
-# COLOR
-#----------------reset----------------#
-NC = \033[0m
+### COLOR ###
 
-#-----------Regular Colors------------#
+RESET = \033[0m
 BLACK = \033[0;30m
 RED = \033[0;31m
 GREEN = \033[32m
@@ -92,18 +108,19 @@ PURPLE = \033[1;35m
 CYAN = \033[1;36m
 WHITE = \033[0;37m
 
-###########################ECHO
-echoCL:
-	printf "\n$(YELLOW)===> Compiling $(RED)$(NAME)$(NC)\n"
+### ECHO ###
 
-echoCLsan:
-	printf "\n$(YELLOW)===> Compiling with fsanitize $(RED)$(NAME)$(NC)\n"
+echoCL:
+	printf "\n$(YELLOW)===> Compiling $(RED)$(NAME)$(RESET)\n"
+
+echoCL_ft:
+	printf "\n$(YELLOW)===> Compiling $(RED)$(NAME_FT)$(RESET)\n"
+
+echoCL_std:
+	printf "\n$(YELLOW)===> Compiling $(RED)$(NAME_STD)$(RESET)\n"
 
 echoCS :
 	printf "$(GREEN)OK\n"
 
 echoCLEAN :
-	printf "$(PURPLE)$(NAME) ===> Cleaning$(NC)\n"
-
-echoFCLEAN :
-	printf "$(PURPLE)$(NAME) ===> Cleaning Exec & Lib$(NC)\n"
+	printf "$(PURPLE)$(NAME) ===> Cleaning$(RESET)\n"
