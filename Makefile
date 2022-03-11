@@ -62,7 +62,8 @@ ifeq ($(UNAME),Linux)
 endif
 
 
-all: echoCL_ft ft echoCS echoCL_std std echoCS
+all: echoCL_ft ft echoCS echoCL_std std
+	printf "$(GREEN)OK\n$(RESET)"
 
 $(OBJS_FT): $(OBJDIR_FT)%.o : $(SRCS)
 	$(CC) $(FLAGS) -D TESTED_NAMESPACE_FT -I $(DIR_HEADERS) -c $< -o $@
@@ -83,6 +84,7 @@ clean: echoCLEAN
 
 fclean: clean
 	$(RM) $(NAME) $(NAME_FT) $(NAME_STD)
+	$(RM) ft_out std_out diff
 
 git: fclean
 	git pull
@@ -92,7 +94,15 @@ git: fclean
 
 re: fclean all
 
-.PHONY: all, clean, fclean, re, git, bonus, ft, std
+test: all
+	printf "\n  $(CYAN)--- FT ---$(RESET)"
+	time ./$(NAME_FT) > ft_out
+	printf "\n  $(CYAN)--- STD ---$(RESET)"
+	time ./$(NAME_STD) > std_out
+	printf "\n"
+	sh diff.sh
+
+.PHONY: all, clean, fclean, re, git, bonus, ft, std, test, diff, ft_out, std_out
 
 .SILENT:
 

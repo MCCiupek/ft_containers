@@ -6,113 +6,97 @@
 	#include <stack>
 	#include <vector>
 	namespace ft = std;
+	#define TEST 0
 #else
 	#include <map.hpp>
 	#include <stack.hpp>
 	#include <vector.hpp>
+	#define TEST 1
 #endif
 
 #include <stdlib.h>
 
-#define MAX_RAM 4294967296
-#define BUFFER_SIZE 4096
-struct Buffer
-{
-	int idx;
-	char buff[BUFFER_SIZE];
-};
+void print_vec( ft::vector<int> v ) {
+	ft::vector<int>::const_iterator it = v.begin(), ite = v.end();
+	for (; it != ite; it++)
+		std::cout << *it << std::endl;
+}
 
+int main( void ) {
 
-#define COUNT (MAX_RAM / (int)sizeof(Buffer))
+	// if (TEST == 0)
+	// 	std::cout << "std" << std::endl;
+	// if (TEST == 1)
+	// 	std::cout << "ft" << std::endl;
 
-template<typename T>
-class MutantStack : public ft::stack<T>
-{
-public:
-	MutantStack() {}
-	MutantStack(const MutantStack<T>& src) { *this = src; }
-	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
-	{
-		this->c = rhs.c;
-		return *this;
-	}
-	~MutantStack() {}
+	ft::vector<int> v;
+	ft::vector<int> vector;
 
-	typedef typename ft::stack<T>::container_type::iterator iterator;
+	int _ratio = 3;
 
-	iterator begin() { return this->c.begin(); }
-	iterator end() { return this->c.end(); }
-};
+    vector.assign(1100 * _ratio, 11);
+    ft::vector<int> tmp(500 * _ratio, 5), tmp2(1000 * _ratio, 10), tmp3(1500 * _ratio, 15), tmp4(3000 * _ratio, 30);
 
-int main(int argc, char** argv) {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./test seed" << std::endl;
-		std::cerr << "Provide a seed please" << std::endl;
-		std::cerr << "Count value:" << COUNT << std::endl;
-		return 1;
-	}
-	const int seed = atoi(argv[1]);
-	srand(seed);
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    long *adr1 = reinterpret_cast<long *>(&vector);
+    long *adr2 = reinterpret_cast<long *>(&tmp);
+    vector.swap(tmp);
 
-	ft::vector<std::string> vector_str;
-	ft::vector<int> vector_int;
-	ft::stack<int> stack_int;
-	ft::vector<Buffer> vector_buffer;
-	//ft::stack<Buffer, std::deque<int> > stack_deq_buffer;
-	ft::map<int, int> map_int;
+	print_vec(v);
+	print_vec(vector);
+	print_vec(tmp);
+	print_vec(tmp2);
+	print_vec(tmp3);
+	print_vec(tmp4);
 
-	for (int i = 0; i < COUNT; i++)
-	{
-		vector_buffer.push_back(Buffer());
-	}
+    if (reinterpret_cast<long *>(&vector) == adr1 && reinterpret_cast<long *>(&tmp) == adr2)
+    	v.push_back(1);
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    vector.swap(tmp3);
 
-	for (int i = 0; i < COUNT; i++)
-	{
-		const int idx = rand() % COUNT;
-		vector_buffer[idx].idx = 5;
-	}
-	ft::vector<Buffer>().swap(vector_buffer);
+	print_vec(v);
+	print_vec(vector);
+	print_vec(tmp);
+	print_vec(tmp2);
+	print_vec(tmp3);
+	print_vec(tmp4);
 
-	try
-	{
-		for (int i = 0; i < COUNT; i++)
-		{
-			const int idx = rand() % COUNT;
-			vector_buffer.at(idx);
-			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
-		}
-	}
-	catch(const std::exception& e)
-	{
-		//NORMAL ! :P
-	}
-	
-	std::cout << "COUNT: " << COUNT << std::endl;
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    ft::swap(vector, tmp2);
 
-	for (int i = 0; i < COUNT; ++i)
-	{
-		map_int.insert(ft::make_pair(rand(), rand()));
-	}
+	print_vec(v);
+	print_vec(vector);
+	print_vec(tmp);
+	print_vec(tmp2);
+	print_vec(tmp3);
+	print_vec(tmp4);
 
-	int sum = 0;
-	for (int i = 0; i < 10000; i++)
-	{
-		int access = rand();
-		sum += map_int[access];
-	}
-	std::cout << "should be constant with the same seed: " << sum << std::endl;
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    ft::swap(vector, tmp4);
 
-	{
-		ft::map<int, int> copy = map_int;
-	}
-	MutantStack<char> iterable_stack;
-	for (char letter = 'a'; letter <= 'z'; letter++)
-		iterable_stack.push(letter);
-	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
-	{
-		std::cout << *it;
-	}
-	std::cout << std::endl;
-	return (0);
+	print_vec(v);
+	print_vec(vector);
+	print_vec(tmp);
+	print_vec(tmp2);
+	print_vec(tmp3);
+	print_vec(tmp4);
+
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+
+	print_vec(v);
+	print_vec(vector);
+	print_vec(tmp);
+	print_vec(tmp2);
+	print_vec(tmp3);
+	print_vec(tmp4);
 }

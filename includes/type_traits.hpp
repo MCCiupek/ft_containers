@@ -22,22 +22,22 @@ namespace ft
 	/* ------------------------------------------------------------- */
 	/* ------------------------ IS_INTEGRAL ------------------------- */
 
-	template <typename> struct __is_integral { static const bool value = false; };
+	template <typename> struct _is_integral_ { static const bool value = false; };
 
-	template <> struct __is_integral<bool> { static const bool value = true; };
-	template <> struct __is_integral<char> { static const bool value = true; };
-	template <> struct __is_integral<unsigned char> { static const bool value = true; };
-	template <> struct __is_integral<wchar_t> { static const bool value = true; };
-	template <> struct __is_integral<short> { static const bool value = true; };
-	template <> struct __is_integral<unsigned short> { static const bool value = true; };
-	template <> struct __is_integral<int> { static const bool value = true; };
-	template <> struct __is_integral<unsigned int> { static const bool value = true; };
-	template <> struct __is_integral<long> { static const bool value = true; };
-	template <> struct __is_integral<unsigned long> { static const bool value = true; };
-	template <> struct __is_integral<long long> { static const bool value = true; };
-	template <> struct __is_integral<unsigned long long> { static const bool value = true; };
+	template <> struct _is_integral_<bool> { static const bool value = true; };
+	template <> struct _is_integral_<char> { static const bool value = true; };
+	template <> struct _is_integral_<unsigned char> { static const bool value = true; };
+	template <> struct _is_integral_<wchar_t> { static const bool value = true; };
+	template <> struct _is_integral_<short> { static const bool value = true; };
+	template <> struct _is_integral_<unsigned short> { static const bool value = true; };
+	template <> struct _is_integral_<int> { static const bool value = true; };
+	template <> struct _is_integral_<unsigned int> { static const bool value = true; };
+	template <> struct _is_integral_<long> { static const bool value = true; };
+	template <> struct _is_integral_<unsigned long> { static const bool value = true; };
+	template <> struct _is_integral_<long long> { static const bool value = true; };
+	template <> struct _is_integral_<unsigned long long> { static const bool value = true; };
 
-	template <typename T> struct is_integral : public __is_integral<typename remove_const<T>::type> {};
+	template <typename T> struct is_integral : public _is_integral_<typename remove_const<T>::type> {};
 
 } /* namespace ft */
 

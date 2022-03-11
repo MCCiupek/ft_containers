@@ -81,6 +81,7 @@
         "fstream": "cpp",
         "ranges": "cpp",
         "cinttypes": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "csignal": "cpp"
     }
 }
