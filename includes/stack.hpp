@@ -24,25 +24,25 @@ namespace ft
 
 		protected:
 
-			container_type								_c;
+			container_type								c;
 
 		/* ------------------------------------------------------------- */
 		/* ---------------- CONSTRUCTORS & DESTRUCTOR ------------------ */
 		
 		public:
 
-			explicit stack(const Container &cont = Container()) : _c(cont) {};
+			explicit stack(const Container &cont = Container()) : c(cont) {};
 			~stack() {};
 
 		/* ------------------------------------------------------------- */
 		/* ----------------------- ELEMENT ACCESS ---------------------- */
 
-		bool empty(void) const { return _c.empty(); }
+		bool empty(void) const { return c.empty(); }
 
-		size_type size() const { return _c.size(); }
+		size_type size() const { return c.size(); }
 
-		value_type &top() { return _c.back(); }
-		const value_type &top() const { return _c.back(); }
+		value_type &top() { return c.back(); }
+		const value_type &top() const { return c.back(); }
 
 		template <class T1, class Container1>
 		friend bool operator==(const stack<T1,Container1> &lhs, const stack<T1,Container1> &rhs);
@@ -53,9 +53,9 @@ namespace ft
 		/* ------------------------------------------------------------- */
 		/* ------------------------- MODIFIERS ------------------------- */
 
-		void pop(void) { _c.pop_back(); };
+		void pop(void) { c.pop_back(); };
 
-		void push (const value_type &val) { _c.push_back(val); };
+		void push (const value_type &val) { c.push_back(val); };
 
 	}; // class stack
 
@@ -67,12 +67,12 @@ namespace ft
 
 	template <class T, class Container>
 	bool operator==(const stack<T,Container> &lhs, const stack<T,Container> &rhs) {
-		return lhs._c == rhs._c;
+		return lhs.c == rhs.c;
 	}
 
 	template <class T, class Container>
 	bool operator < (const stack<T,Container> &lhs, const stack<T,Container> &rhs) {
-		return lhs._c < rhs._c;
+		return lhs.c < rhs.c;
 	}
 
 	template <class T, class Container>

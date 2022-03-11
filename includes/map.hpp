@@ -5,7 +5,7 @@
 # include <iostream>
 # include "iterator.hpp"
 # include "algorithm.hpp"
-# include "type_traits.hpp"
+// # include "type_traits.hpp"
 # include "utility.hpp"
 # include "red_black_tree.hpp"
 
@@ -55,10 +55,10 @@ namespace ft
 					}
 			};
 
-			typedef ft::bidirectional_iterator<value_type, Node<value_type, value_compare> >	iterator;
+			typedef ft::bidirectional_iterator<value_type, Node<value_type, value_compare> >		iterator;
 			typedef ft::bidirectional_iterator<const value_type, Node<value_type, value_compare> >	const_iterator;
-			typedef ft::reverse_iterator<iterator>												reverse_iterator;
-			typedef ft::reverse_iterator<const_iterator>										const_reverse_iterator;
+			typedef ft::reverse_iterator<iterator>													reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>											const_reverse_iterator;
 
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
@@ -123,8 +123,9 @@ namespace ft
 			/* ----------------------- ELEMENT ACCESS ---------------------- */
 
 			mapped_type & operator[] ( const key_type& k ) {
-					_tree.insert(ft::make_pair(k, mapped_type()));
-					return (*find(k)).second; };
+					// _tree.insert(ft::make_pair(k, mapped_type()));
+					// return (*find(k)).second; 
+					return (*((this->insert(ft::make_pair(k, mapped_type()))).first)).second; };
 
 			/* ------------------------------------------------------------- */
 			/* ------------------------- ITERATORS ------------------------- */

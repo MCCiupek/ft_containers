@@ -3,7 +3,7 @@
 
 # pragma once
 # include <iostream>
-# include "type_traits.hpp"
+//# include "type_traits.hpp"
 
 namespace ft
 {
@@ -75,9 +75,9 @@ namespace ft
 	}; /* advance */
 
 	template <class InputIterator>
-	typename iterator_traits<InputIterator>::difference_type
+	typename ft::iterator_traits<InputIterator>::difference_type
 		distance( InputIterator first, InputIterator last ) {
-			typename iterator_traits<InputIterator>::difference_type __r(0);
+			typename ft::iterator_traits<InputIterator>::difference_type __r(0);
 			for (; first != last; ++first)
 				++__r;
 			return __r;
@@ -85,20 +85,20 @@ namespace ft
 
 	template <class InputIterator>
 	InputIterator next( InputIterator x,
-		typename iterator_traits<InputIterator>::difference_type n = 1 ) {
+		typename ft::iterator_traits<InputIterator>::difference_type n = 1 ) {
 			if (n >= 0)
 				advance(x, n);
 			return x;
 		}; /* next */
 
-	template <class BidirectionalIterator>
-	BidirectionalIterator prev( BidirectionalIterator x,
-		typename iterator_traits<BidirectionalIterator>::difference_type n = 1,
-		typename ft::enable_if<BidirectionalIterator::iterator_category == BidirectionalIterator::bidirectional_iterator_tag>::type* = 0 ) {
-			if (n >= 0)
-				advance(x, -n);
-			return x;
-		}; /* prev */
+	// template <class BidirectionalIterator>
+	// BidirectionalIterator prev( BidirectionalIterator x,
+	// 	typename ft::iterator_traits<BidirectionalIterator>::difference_type n = 1,
+	// 	typename ft::enable_if<BidirectionalIterator::iterator_category == BidirectionalIterator::bidirectional_iterator_tag>::type* = 0 ) {
+	// 		if (n >= 0)
+	// 			advance(x, -n);
+	// 		return x;
+	// 	}; /* prev */
 
 	/* ------------------------------------------------------------- */
 	/* ------------------ REVERSE ITERATORS --------------------- */
