@@ -447,7 +447,7 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 			x->right() = y->left();
 			y->left()->up() = x;
 			y->up() = x->up();
-			if ( !x->up() )
+			if ( !x->up() || x->up() == this->_null )
 				this->_root = y;
 			else if ( x == x->up()->left() )
 				x->up()->left() = y;
@@ -463,7 +463,7 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 			x->left() = y->right();
 			y->right()->up() = x;
 			y->up() = x->up();
-			if ( !x->up() )
+			if ( !x->up() || x->up() == this->_null )
 				this->_root = y;
 			else if ( x == x->up()->right() )
 				x->up()->right() = y;
@@ -546,18 +546,26 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 	public:
 
 		ft::pair<Node *, bool>	insert( value_type key ) {
-			//Node * _new;
+			
+			ft::pair<Node *, bool> _insert;
+			Node * _new;
 
-			return BinarySearchTree::insert(key);
+			_insert = BinarySearchTree::insert(key);
+			//return BinarySearchTree::insert(key);
 			// std::cout << *this << std::endl;
-			//_new = this->search(key);
+			if ( _insert.second ) {
+				_new = _insert.first;
+				insert_repair_tree(_new);
+				while ( this->_root->up() && this->_root->up() != this->_null )
+				{
+					this->_root = this->_root->up();
+				}
+			}
+			return _insert;
 			// insert_repair_tree(_new);
 			// std::cout << *this << std::endl;
 			// std::cout << "root: " << this->_root->getKey().first << std::endl;
-			// while ( this->_root->up() && this->_root->up() != this->_null )
-			// {
-			// 	this->_root = this->_root->up();
-			// }
+			
 			
 		}
 
