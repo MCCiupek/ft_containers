@@ -1,176 +1,127 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#include <list>
-#include <stdlib.h>
-#include "red_black_tree.hpp"
-#include <stdlib.h>
-
-
-#if TESTED_NAMESPACE_STD
-	#include <vector>
+#if TESTED_NAMESPACE_STD //CREATE A REAL STL EXAMPLE
 	#include <map>
 	#include <stack>
-	#define TESTED_NAMESPACE std
+	#include <vector>
+	namespace ft = std;
 	#define TEST 0
-#endif
-#if TESTED_NAMESPACE_FT
-	#include "vector.hpp"
-	#include "map.hpp"
-	#include "stack.hpp"
-	#define TESTED_NAMESPACE ft
+#else
+	#include <map.hpp>
+	#include <stack.hpp>
+	#include <vector.hpp>
 	#define TEST 1
 #endif
 
-#define _pair TESTED_NAMESPACE::pair
-
-// --- Class foo
-template <typename T>
-class foo {
-	public:
-		typedef T	value_type;
-
-		foo(void) : value(), _verbose(false) { };
-		foo(value_type src, const bool verbose = false) : value(src), _verbose(verbose) { };
-		foo(foo const &src, const bool verbose = false) : value(src.value), _verbose(verbose) { };
-		~foo(void) { if (this->_verbose) std::cout << "~foo::foo()" << std::endl; };
-		void m(void) { std::cout << "foo::m called [" << this->value << "]" << std::endl; };
-		void m(void) const { std::cout << "foo::m const called [" << this->value << "]" << std::endl; };
-		foo &operator=(value_type src) { this->value = src; return *this; };
-		foo &operator=(foo const &src) {
-			if (this->_verbose || src._verbose)
-				std::cout << "foo::operator=(foo) CALLED" << std::endl;
-			this->value = src.value;
-			return *this;
-		};
-		value_type	getValue(void) const { return this->value; };
-		void		switchVerbose(void) { this->_verbose = !(this->_verbose); };
-
-		operator value_type(void) const {
-			return value_type(this->value);
-		}
-	private:
-		value_type	value;
-		bool		_verbose;
+#include <stdlib.h>
+#define MAX_RAM 4294967296
+#define BUFFER_SIZE 4096
+struct Buffer
+{
+	int idx;
+	char buff[BUFFER_SIZE];
 };
 
-template <typename T>
-std::ostream	&operator<<(std::ostream &o, foo<T> const &bar) {
-	o << bar.getValue();
-	return o;
-}
-// --- End of class foo
 
-template <typename T>
-T	inc(T it, int n)
+#define COUNT (MAX_RAM / (int)sizeof(Buffer))
+
+template<typename T>
+class MutantStack : public ft::stack<T>
 {
-	while (n-- > 0)
-		++it;
-	return (it);
-}
-
-template <typename T>
-T	dec(T it, int n)
-{
-	while (n-- > 0)
-		--it;
-	return (it);
-}
-
-
-template <typename T>
-std::string	printPair(const T &iterator, bool nl = true, std::ostream &o = std::cout)
-{
-	o << "key: " << iterator->first << " | value: " << iterator->second;
-	if ( nl )
-		o << std::endl;
-	return "";
-}
-
-template <typename T_MAP>
-void	printSize(T_MAP const &mp, bool print_content = 1)
-{
-	std::cout << "size: " << mp.size() << std::endl;
-	std::cout << "max_size: " << mp.max_size() << std::endl;
-	size_t i = 0;
-	if (print_content)
+public:
+	MutantStack() {}
+	MutantStack(const MutantStack<T>& src) { *this = src; }
+	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
 	{
-		typename T_MAP::const_iterator it = mp.begin(), ite = mp.end();
-		std::cout << std::endl << "Content is:" << std::endl;
-		for (; it != ite; ++it) {
-			std::cout << "- " << printPair(it, false) << std::endl;
-			if ( i++ > mp.size() )
-				break;
+		this->c = rhs.c;
+		return *this;
+	}
+	~MutantStack() {}
+
+	typedef typename ft::stack<T>::container_type::iterator iterator;
+
+	iterator begin() { return this->c.begin(); }
+	iterator end() { return this->c.end(); }
+};
+
+int main(int argc, char** argv) {
+	if (argc != 2)
+	{
+		std::cerr << "Usage: ./test seed" << std::endl;
+		std::cerr << "Provide a seed please" << std::endl;
+		std::cerr << "Count value:" << COUNT << std::endl;
+		return 1;
+	}
+	const int seed = atoi(argv[1]);
+	srand(seed);
+
+	ft::vector<std::string> vector_str;
+	ft::vector<int> vector_int;
+	ft::stack<int> stack_int;
+	ft::vector<Buffer> vector_buffer;
+	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
+	ft::map<int, int> map_int;
+
+	//map_int.insert(ft::make_pair(10, 10));
+	//map_int.insert(ft::make_pair(10, 10));
+	ft::map<int, int> copy1 = map_int;
+
+	for (int i = 0; i < COUNT; i++)
+	{
+		vector_buffer.push_back(Buffer());
+	}
+
+	for (int i = 0; i < COUNT; i++)
+	{
+		const int idx = rand() % COUNT;
+		vector_buffer[idx].idx = 5;
+	}
+	ft::vector<Buffer>().swap(vector_buffer);
+
+	try
+	{
+		for (int i = 0; i < COUNT; i++)
+		{
+			const int idx = rand() % COUNT;
+			vector_buffer.at(idx);
+			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
 		}
 	}
-	std::cout << "###############################################" << std::endl;
-}
-
-
-template <typename T1, typename T2>
-void	printReverse(TESTED_NAMESPACE::map<T1, T2> &mp)
-{
-	typename TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.end(), ite = mp.begin();
-
-	std::cout << "printReverse:" << std::endl;
-	while (it != ite) {
-		it--;
-		std::cout << "-> " << printPair(it, false) << std::endl;
+	catch(const std::exception& e)
+	{
+		//NORMAL ! :P
 	}
-	std::cout << "_______________________________________________" << std::endl;
-}
+	
+	// for (int i = 0; i < COUNT; ++i)
+	std::cout << "COUNT:" << COUNT << std::endl;
+	for (int i = 0; i < COUNT; ++i)
+	{
+		map_int.insert(ft::make_pair(rand(), rand()));
+	}
 
-
-#define T1 int
-#define T2 std::string
-typedef _pair<const T1, T2> T3;
-
-static int iter = 0;
-
-template <typename MAP, typename U>
-void	ft_erase(MAP &mp, U param)
-{
-	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
-	mp.erase(param);
-	printSize(mp);
-}
-
-template <typename MAP, typename U, typename V>
-void	ft_erase(MAP &mp, U param, V param2)
-{
-	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
-	mp.erase(param, param2);
-	printSize(mp);
-}
-
-int		main(void)
-{
-	std::list<T3> lst;
-	unsigned int lst_size = 10;
-	for (unsigned int i = 0; i < lst_size; ++i)
-		lst.push_back(T3(i, std::string((lst_size - i), i + 65)));
-	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
-	printSize(mp);
-
-	ft_erase(mp, ++mp.begin());
-
-	ft_erase(mp, mp.begin());
-	ft_erase(mp, --mp.end());
-
-	ft_erase(mp, mp.begin(), ++(++(++mp.begin())));
-	ft_erase(mp, --(--(--mp.end())), --mp.end());
-
-	mp[10] = "Hello";
-	mp[11] = "Hi there";
-	printSize(mp);
-	ft_erase(mp, --(--(--mp.end())), mp.end());
-
-	mp[12] = "ONE";
-	mp[13] = "TWO";
-	mp[14] = "THREE";
-	mp[15] = "FOUR";
-	printSize(mp);
-	ft_erase(mp, mp.begin(), mp.end());
-
+	int sum = 0;
+	for (int i = 0; i < 10000; i++)
+	{
+		int access = rand();
+		sum += map_int[access];
+	}
+	std::cout << "should be constant with the same seed: " << sum << std::endl;
+	std::cout << "size:" << map_int.size() << std::endl;
+	std::cout << "max size:" << map_int.max_size() << std::endl;
+	{
+		ft::map<int, int> copy = map_int;
+	}
+	// ft::map<int, int> copy = map_int;
+	// copy = map_int;
+	std::cout << "ok" << std::endl;
+	MutantStack<char> iterable_stack;
+	for (char letter = 'a'; letter <= 'z'; letter++)
+		iterable_stack.push(letter);
+	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
+	{
+		std::cout << *it;
+	}
+	std::cout << std::endl;
 	return (0);
 }

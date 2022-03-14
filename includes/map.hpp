@@ -110,7 +110,7 @@ namespace ft
 			 */
 			//map( const map & other ) : _tree(value_compare(key_compare())), _alloc(other._alloc) { /*std::cout << "copy construct" << std::endl; */insert(other.begin(), other.end()); };
 			//map( const map & other ) : _tree(other.value_comp()), _alloc(other._alloc) { insert(other.begin(), other.end()); };
-			map( const map & other ) : _tree(value_compare(other._comp)), _alloc(other._alloc), _comp(other._comp) {
+			map( const map & other ) : _tree(value_compare(key_compare())), _alloc(other._alloc), _comp(other._comp) {
 			 	//*this = map(other.begin(), other.end(), other._comp, other._alloc);
 				// std::cout << "copy construct" << std::endl;
 				// std::cout << "size: " << size() << std::endl;
