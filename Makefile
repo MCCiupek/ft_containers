@@ -96,9 +96,9 @@ re: fclean all
 
 test: all
 	printf "\n  $(CYAN)--- FT ---$(RESET)"
-	time ./$(NAME_FT) > ft_out
+	time ./$(NAME_FT) 42 > ft_out
 	printf "\n  $(CYAN)--- STD ---$(RESET)"
-	time ./$(NAME_STD) > std_out
+	time ./$(NAME_STD) 42 > std_out
 	printf "\n"
 	sh diff.sh
 

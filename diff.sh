@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIFF=$(diff std_out ft_out)
-if [ "$DIFF" == "" ]
+if ["$DIFF" == ""]
 then
     echo "\033[32mDIFF OK\033[0m"
 else

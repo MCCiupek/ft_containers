@@ -210,10 +210,13 @@ class BinarySearchTree {
 		value_compare				_cmp;
 		Node *						_null;
 		allocator_type				_alloc;
+		ft::pair<Node *, bool>		_insert_return;
+		bool						_remove_return;
 
 	public:
 
 		BinarySearchTree( value_compare const & cmp = value_compare(), const Allocator& alloc = Allocator() ) : _root(NULL), _cmp(cmp), _alloc(alloc) {
+			//std::cout << "new BST" << std::endl;
 			_null = _alloc.allocate(1);
 			_alloc.construct(_null, Node());
 			_root = _null;
@@ -247,12 +250,15 @@ class BinarySearchTree {
 				new_node->right() = _null;
 				new_node->left() = _null;
 				_null->up() = new_node;
+				_insert_return = ft::make_pair(new_node, true);
 				return new_node;
 			}
 			if ( _cmp(key, node->getKey()) )
 			 	node->left() = rinsert(node->left(), key, node);
 			else if ( _cmp(node->getKey(), key) )
 			 	node->right() = rinsert(node->right(), key, node);
+			else
+				_insert_return = ft::make_pair(node, false);
 			return node;
 		}
 
@@ -268,12 +274,14 @@ class BinarySearchTree {
 				if ( node->left() == _null && node->right() == _null ) {
 					_alloc.destroy(node);
 					_alloc.deallocate(node, 1);
+					_remove_return = true;
 					return _null;
 				}
 				else if ( node->left() != _null && node->right() == _null ) {
 					Node * tmp = node->left();
 					_alloc.destroy(node);
 					_alloc.deallocate(node, 1);
+					_remove_return = true;
 					if ( prev )
 						tmp->up() = prev;
 					return tmp;
@@ -282,6 +290,7 @@ class BinarySearchTree {
 					Node * tmp = node->right();
 					_alloc.destroy(node);
 					_alloc.deallocate(node, 1);
+					_remove_return = true;
 					if ( prev )
 						tmp->up() = prev;
 					return tmp;
@@ -350,7 +359,7 @@ class BinarySearchTree {
 
 	public:
 
-		void		insert( value_type key ) { _root = rinsert(_root, key); }
+		ft::pair<Node *, bool>		insert( value_type key ) { _root = rinsert(_root, key); return _insert_return; }
 		Node *		search( value_type key ) const { return rsearch(_root, key); }
 		void		print_keys( void ) const { rprint_keys(_root); }
 		void		print_tree( void ) const { rprint_tree(_root); }
@@ -362,19 +371,21 @@ class BinarySearchTree {
 		size_type	max_size( void ) const { return _alloc.max_size(); }
 		void		clear( void ) { rdelete(_root); }
 
-		void		remove( value_type key ) {
+		bool		remove( value_type key ) {
 			Node * to_remove = search(key);
+			_remove_return = false;
 			if ( !to_remove || to_remove == _null )
-				return;
+				return _remove_return;
 			if ( to_remove->right() != _null && to_remove->left() != _null ) {
 				Node * _tmp = rmin(to_remove->right());
 				to_remove->swap(_tmp, _null);
 				if ( this->_root == to_remove )
 					this->_root = _tmp;
 				_tmp->right() = rremove(_tmp->right(), key);
-				return;
+				return _remove_return;
 			}
 			_root = rremove(_root, key);
+			return _remove_return;
 		}
 		
 		void		swap( BinarySearchTree & other ) {
@@ -490,7 +501,7 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 			}
 		}
 
-		void insert_case4step2( Node *node ) {
+		void insert_case4step2( Node * node ) {
 			
 			Node * p = node->up();
 			Node * g = node->up() ? node->up()->up() : NULL;
@@ -522,9 +533,9 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 		}
 
 		void insert_repair_tree( Node *node ) {
-			if ( !node->up() )
+			if ( !node->up() || node->up() == this->_null )
 				insert_case1(node);
-			else if ( node->up() && node->up()->getColor() == BLACK )
+			else if ( node->up() && node->up() != this->_null && node->up()->getColor() == BLACK )
 				insert_case2(node);
 			else if ( node->uncle() && node->uncle()->getColor() == RED)
 				insert_case3(node);
@@ -534,12 +545,12 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 
 	public:
 
-		void	insert( value_type key ) {
-			Node * _new;
+		ft::pair<Node *, bool>	insert( value_type key ) {
+			//Node * _new;
 
-			BinarySearchTree::insert(key);
+			return BinarySearchTree::insert(key);
 			// std::cout << *this << std::endl;
-			_new = this->search(key);
+			//_new = this->search(key);
 			// insert_repair_tree(_new);
 			// std::cout << *this << std::endl;
 			// std::cout << "root: " << this->_root->getKey().first << std::endl;
@@ -550,8 +561,8 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 			
 		}
 
-		void	remove( value_type key ) {
-			BinarySearchTree::remove(key);
+		bool	remove( value_type key ) {
+			return BinarySearchTree::remove(key);
 			// insert_repair_tree(this->_root);
 		}
 

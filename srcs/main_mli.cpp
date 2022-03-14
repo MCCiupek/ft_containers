@@ -22,8 +22,6 @@
 	#define TEST 1
 #endif
 
-#define TESTED_TYPE int
-#define T_SIZE_TYPE typename TESTED_NAMESPACE::vector<T>::size_type
 #define _pair TESTED_NAMESPACE::pair
 
 // --- Class foo
@@ -108,6 +106,7 @@ void	printSize(T_MAP const &mp, bool print_content = 1)
 	std::cout << "###############################################" << std::endl;
 }
 
+
 template <typename T1, typename T2>
 void	printReverse(TESTED_NAMESPACE::map<T1, T2> &mp)
 {
@@ -122,61 +121,40 @@ void	printReverse(TESTED_NAMESPACE::map<T1, T2> &mp)
 }
 
 #define T1 int
-#define T2 std::string
+#define T2 int
 typedef _pair<const T1, T2> T3;
-
-static int iter = 0;
-
-template <typename MAP, typename U>
-void	ft_erase(MAP &mp, U param)
-{
-	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
-	mp.erase(param);
-	printSize(mp);
-}
-
-template <typename MAP, typename U, typename V>
-void	ft_erase(MAP &mp, U param, V param2)
-{
-	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
-	mp.erase(param, param2);
-	printSize(mp);
-}
 
 int		main(void)
 {
 	std::list<T3> lst;
-	unsigned int lst_size = 10;
+	unsigned int lst_size = 7;
 	for (unsigned int i = 0; i < lst_size; ++i)
-		lst.push_back(T3(i, std::string((lst_size - i), i + 65)));
+		lst.push_back(T3(lst_size - i, i));
+
 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
+	TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.begin(), ite = mp.end();
+
+	TESTED_NAMESPACE::map<T1, T2> mp_range(it, --(--ite));
+	for (int i = 0; it != ite; ++it)
+		it->second = ++i * 5;
+
+	it = mp.begin(); ite = --(--mp.end());
+	TESTED_NAMESPACE::map<T1, T2> mp_copy(mp);
+	for (int i = 0; it != ite; ++it)
+		it->second = ++i * 7;
+
+	std::cout << "\t-- PART ONE --" << std::endl;
 	printSize(mp);
+	printSize(mp_range);
+	printSize(mp_copy);
 
-	ft_erase(mp, ++mp.begin());
+	mp = mp_copy;
+	mp_copy = mp_range;
+	mp_range.clear();
 
-	ft_erase(mp, mp.begin());
-	ft_erase(mp, --mp.end());
-
-	ft_erase(mp, mp.begin(), ++(++(++mp.begin())));
-	ft_erase(mp, --(--(--mp.end())), --mp.end());
-
-	mp[10] = "Hello";
-	mp[11] = "Hi there";
+	std::cout << "\t-- PART TWO --" << std::endl;
 	printSize(mp);
-
-	ft_erase(mp, --(--(--mp.end())), mp.end());
-
-	mp[12] = "ONE";
-	mp[13] = "TWO";
-	mp[14] = "THREE";
-	mp[15] = "FOUR";
-	printSize(mp);
-	ft_erase(mp, mp.begin(), mp.end());
-
-	if (TEST == 0)
-		std::cout << "std" << std::endl;
-	if (TEST == 1)
-		std::cout << "ft" << std::endl;
-	
+	printSize(mp_range);
+	printSize(mp_copy);
 	return (0);
 }
