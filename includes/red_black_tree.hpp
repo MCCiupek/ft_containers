@@ -203,6 +203,7 @@ class BinarySearchTree {
 		typedef Allocator							allocator_type;
 		typedef typename allocator_type::size_type	size_type;
 		typedef typename allocator_type::pointer	pointer;
+		typedef typename allocator_type::reference	reference;
 
 	protected:
 
@@ -408,20 +409,8 @@ class BinarySearchTree {
 		}
 		
 		void		swap( BinarySearchTree & other ) {
-			pointer 		tmp_root = _root;
-			pointer			tmp_null = _null;
-			value_compare	tmp_cmp = _cmp;
-			allocator_type	tmp_alloc = _alloc;
-
-			_root = other._root;
-			_null = other._null;
-			_cmp = other._cmp;
-			_alloc = other._alloc;
-
-			other._root = tmp_root;
-			other._null = tmp_null;
-			other._cmp = tmp_cmp;
-			other._alloc = tmp_alloc;
+			std::swap(_root, other._root);
+			std::swap(_null, other._null);
 		}
 		
 

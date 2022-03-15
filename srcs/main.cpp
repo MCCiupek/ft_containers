@@ -37,9 +37,11 @@ int main ()
 
 
   map<char, int>::const_iterator tmp = foo.begin(); //tmp iterates through foo
+  map<char, int>::iterator tmp1 = foo.begin(); //tmp iterates through foo
   map<char, int>::const_iterator tmp2 = bar.begin(); //tmp2 iterates through bar
 
   std::cout << (*tmp).first << std::endl;
+  std::cout << (*tmp1).first << std::endl;
 
   swap(bar, foo); //tmp iterates through bar
 				//tmp2 iterates through foo
@@ -65,6 +67,8 @@ int main ()
     std::cout << it->first << " => " << it->second << '\n';
 
   std::cout << (*tmp).first << std::endl;
+  std::cout << (*tmp1).first << std::endl;
+  
   return 0;
 
 	while(tmp != bar.end())

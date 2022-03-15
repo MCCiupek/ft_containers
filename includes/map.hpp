@@ -349,7 +349,8 @@ namespace ft
 
 	template <typename T1, typename T2>
 	void swap (const map<T1, T2>& x, const map<T1, T2>& y) {
-		return x.swap(y);
+		std::swap(x, y);
+		//return x.swap(y);
 	};
 
 } // namespace ft
