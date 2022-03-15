@@ -223,12 +223,21 @@ class BinarySearchTree {
 		};
 		BinarySearchTree( const BinarySearchTree & other ) : _root(other._root), _cmp(other._cmp), _null(other._null), _alloc(other._alloc) {};
 		BinarySearchTree& operator=( const BinarySearchTree & other ) {
-			//std::cout << "BST op=" << std::endl;
+			// std::cout << "BST op=" << std::endl;
 			if ( this != &other ) {
-				_root = other._root;
-				_cmp = other._cmp;
-				_alloc = other._alloc;
-				_null = other._null;
+				// _root = other._root;
+				// _cmp = other._cmp;
+				// _alloc = other._alloc;
+				// _null = other._null;
+				//clear();
+				//_alloc.destroy(_root);
+				//_alloc.deallocate(_root, 1);
+				// _null = _alloc.allocate(1);
+				// _alloc.construct(_null, Node());
+				// _root = _null;
+				// std::cout << other.size() << std::endl;
+				if ( other.size() )
+					copy(other);
 			}
 			return *this;
 		};
@@ -322,6 +331,14 @@ class BinarySearchTree {
 			}
 		}
 
+		void rcopy( Node * node ) {
+			if ( node && node != _null ) {
+				rcopy(node->left());
+				rcopy(node->right());
+				_root = insert(node->getKey()).first;
+			}
+		}
+
 		Node * rmin( Node * node ) const {
 			if ( !node->left() || node->left() == _null )
 				return node;
@@ -371,6 +388,7 @@ class BinarySearchTree {
 		size_type					size( void ) const { return rsize(_root); }
 		size_type					max_size( void ) const { return _alloc.max_size(); }
 		void						clear( void ) { rdelete(_root); }
+		void						copy( const BinarySearchTree & other ) { rcopy(other._root); }
 
 		bool		remove( value_type key ) {
 			Node * to_remove = search(key);
@@ -433,12 +451,12 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 
 		RedBlackTree( value_compare const & cmp = value_compare(), const Alloc& alloc = Alloc() ) : BinarySearchTree( cmp, alloc ) {};
 		RedBlackTree( const BinarySearchTree & other ) : BinarySearchTree(other) {};
-		RedBlackTree& operator=( const RedBlackTree & other ) {
-			if ( this != &other ) {
-				this->_root = other._root;	
-			}
-			return *this;
-		};
+		// RedBlackTree& operator=( const RedBlackTree & other ) {
+		// 	if ( this != &other ) {
+		// 		this->_root = other._root;	
+		// 	}
+		// 	return *this;
+		// };
 		~RedBlackTree() {};
 
 	private:

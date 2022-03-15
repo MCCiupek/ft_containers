@@ -110,14 +110,17 @@ namespace ft
 			 */
 			//map( const map & other ) : _tree(value_compare(key_compare())), _alloc(other._alloc) { /*std::cout << "copy construct" << std::endl; */insert(other.begin(), other.end()); };
 			//map( const map & other ) : _tree(other.value_comp()), _alloc(other._alloc) { insert(other.begin(), other.end()); };
-			map( const map & other ) : _tree(value_compare(key_compare())), _alloc(other._alloc), _comp(other._comp) {
+			map( const map & other ) : _tree(value_compare(other._comp)), _alloc(other._alloc), _comp(other._comp) {
 			 	//*this = map(other.begin(), other.end(), other._comp, other._alloc);
 				// std::cout << "copy construct" << std::endl;
 				// std::cout << "size: " << size() << std::endl;
 				// std::cout << "other size: " << other.size() << std::endl;
 				// std::cout << "begin: " << (*other.begin()).first << std::endl;
 				// std::cout << "tail: " << (*other.tail()).first << std::endl;
-				insert(other.begin(), other.end());
+				if (other.size() > 10000)
+					_tree = other._tree;
+				else
+					insert(other.begin(), other.end());
 				// int i = 0;
 				// for (const_iterator it = other.begin(); it != other.end(); it++) {
 				// 	std::cout << "[" << i << "]: " << (*it).first << " | " << (*it).second << std::endl;
