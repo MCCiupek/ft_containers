@@ -93,8 +93,6 @@ int main(int argc, char** argv) {
 		//NORMAL ! :P
 	}
 	
-	// for (int i = 0; i < COUNT; ++i)
-	std::cout << "COUNT:" << COUNT << std::endl;
 	for (int i = 0; i < COUNT; ++i)
 	{
 		map_int.insert(ft::make_pair(rand(), rand()));
@@ -107,14 +105,10 @@ int main(int argc, char** argv) {
 		sum += map_int[access];
 	}
 	std::cout << "should be constant with the same seed: " << sum << std::endl;
-	std::cout << "size:" << map_int.size() << std::endl;
-	std::cout << "max size:" << map_int.max_size() << std::endl;
+
 	{
 		ft::map<int, int> copy = map_int;
 	}
-	// ft::map<int, int> copy = map_int;
-	// copy = map_int;
-	std::cout << "ok" << std::endl;
 	MutantStack<char> iterable_stack;
 	for (char letter = 'a'; letter <= 'z'; letter++)
 		iterable_stack.push(letter);
