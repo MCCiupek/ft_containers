@@ -79,8 +79,8 @@ namespace ft
 		
 		private:
 
-			iterator tail() { return iterator(_tree.max(), _tree.end(), _tree.root()); };
-			const_iterator tail() const { return const_iterator(_tree.max(), _tree.end(), _tree.root()); };
+			iterator tail() { return iterator(_tree.max()); };
+			const_iterator tail() const { return const_iterator(_tree.max()); };
 
 
 		public:
@@ -164,11 +164,11 @@ namespace ft
 			/* ------------------------------------------------------------- */
 			/* ------------------------- ITERATORS ------------------------- */
 
-			iterator begin() { return iterator(_tree.min(), _tree.end(), _tree.root()); };
-			const_iterator begin() const { return const_iterator(_tree.min(), _tree.end(), _tree.root()); };
+			iterator begin() { return iterator(_tree.min()); };
+			const_iterator begin() const { return const_iterator(_tree.min()); };
 
-			iterator end() { return iterator(_tree.end(), _tree.end(), _tree.root()); };
-			const_iterator end() const { return const_iterator(_tree.end(), _tree.end(), _tree.root()); };
+			iterator end() { return iterator(_tree.end()); };
+			const_iterator end() const { return const_iterator(_tree.end()); };
 
 			reverse_iterator rbegin() { return reverse_iterator(end()); };
 			const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); };
@@ -192,7 +192,7 @@ namespace ft
 
 				//size_type old_size = size();
 				ft::pair<Node<value_type, value_compare> *, bool> ret = _tree.insert(val);
-				return ft::make_pair(iterator(ret.first, _tree.end(), _tree.root()), ret.second);
+				return ft::make_pair(iterator(ret.first), ret.second);
 			}
 
 			iterator	insert( iterator position, const value_type &val ) {
@@ -243,10 +243,10 @@ namespace ft
 			/* ------------------------ OPERATIONS ------------------------- */
 
 			iterator	find( const key_type & k )
-				{ return iterator(_tree.search(ft::make_pair(k, mapped_type())), _tree.end(), _tree.root()); }
+				{ return iterator(_tree.search(ft::make_pair(k, mapped_type()))); }
 
 			const_iterator	find( const key_type & k ) const 
-				{ return const_iterator(_tree.search(ft::make_pair(k, mapped_type())), _tree.end(), _tree.root()); }
+				{ return const_iterator(_tree.search(ft::make_pair(k, mapped_type()))); }
 
 			size_type	count( const key_type &k ) const {
 				if ( find(k) == end() )

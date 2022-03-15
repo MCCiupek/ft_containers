@@ -5,117 +5,135 @@
 	#include <map>
 	#include <stack>
 	#include <vector>
-	namespace ft = std;
+	# define NAMESPACE std
 	#define TEST 0
 #else
 	#include <map.hpp>
 	#include <stack.hpp>
 	#include <vector.hpp>
+	#define NAMESPACE ft
 	#define TEST 1
 #endif
 
-#include <stdlib.h>
-#define MAX_RAM 4294967296
-#define BUFFER_SIZE 4096
-struct Buffer
+using namespace NAMESPACE;
+
+template <class Key, class T>
+void	print(map<Key, T>& lst)
 {
-	int idx;
-	char buff[BUFFER_SIZE];
-};
+	for (typename map<Key, T>::iterator it = lst.begin(); it != lst.end(); it++)
+		std::cout << it->first << " => " << it->second << '\n';
+}
 
-
-#define COUNT (MAX_RAM / (int)sizeof(Buffer))
-
-template<typename T>
-class MutantStack : public ft::stack<T>
+int main ()
 {
-public:
-	MutantStack() {}
-	MutantStack(const MutantStack<T>& src) { *this = src; }
-	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
-	{
-		this->c = rhs.c;
-		return *this;
-	}
-	~MutantStack() {}
+  map<char,int> foo,bar;
 
-	typedef typename ft::stack<T>::container_type::iterator iterator;
+  foo['x']=100;
+  foo['y']=200;
 
-	iterator begin() { return this->c.begin(); }
-	iterator end() { return this->c.end(); }
-};
+  bar['a']=11;
+  bar['b']=22;
+  bar['c']=33;
 
-int main(int argc, char** argv) {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./test seed" << std::endl;
-		std::cerr << "Provide a seed please" << std::endl;
-		std::cerr << "Count value:" << COUNT << std::endl;
-		return 1;
-	}
-	const int seed = atoi(argv[1]);
-	srand(seed);
 
-	ft::vector<std::string> vector_str;
-	ft::vector<int> vector_int;
-	ft::stack<int> stack_int;
-	ft::vector<Buffer> vector_buffer;
-	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
-	ft::map<int, int> map_int;
+  map<char, int>::const_iterator tmp = foo.begin(); //tmp iterates through foo
+  map<char, int>::const_iterator tmp2 = bar.begin(); //tmp2 iterates through bar
 
-	//map_int.insert(ft::make_pair(10, 10));
-	//map_int.insert(ft::make_pair(10, 10));
-	ft::map<int, int> copy1 = map_int;
+  std::cout << (*tmp).first << std::endl;
 
-	for (int i = 0; i < COUNT; i++)
+  swap(bar, foo); //tmp iterates through bar
+				//tmp2 iterates through foo
+
+
+  map<char, int>	other;
+
+  other['1'] = 73;
+  other['2'] = 173;
+  other['3'] = 763;
+  other['4'] = 73854;
+  other['5'] = 74683;
+  other['6'] = 753;
+
+  map<char, int>::const_iterator tmp3 = other.begin(); // tmp3 iterates through other
+
+  std::cout << "foo contains:\n";
+  for (map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+  std::cout << "bar contains:\n";
+  for (map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+  std::cout << (*tmp).first << std::endl;
+  return 0;
+
+	while(tmp != bar.end())
 	{
-		vector_buffer.push_back(Buffer());
+		std::cout << tmp->first << " => " << tmp->second << '\n';
+		tmp++;
+	}
+	tmp--;
+
+  return 0;
+
+	while(tmp2 != foo.end())
+	{
+		std::cout << tmp2->first << " => " << tmp2->second << '\n';
+		tmp2++;
+	}
+	tmp2--;
+
+	swap(other, foo); //tmp2 iterates through other
+					//tmp3 iterates throught foo
+	print(other);
+	print(foo);
+	print(bar);
+	while(tmp != bar.begin())
+	{
+		std::cout << tmp->first << " => " << tmp->second << '\n';
+		tmp--;
+	}
+	std::cout << tmp->first << " => " << tmp->second << '\n';
+
+	while(tmp2 != other.begin())
+	{
+		std::cout << tmp2->first << " => " << tmp2->second << '\n';
+		tmp2--;
+	}
+	std::cout << tmp2->first << " => " << tmp2->second << '\n';
+
+	while(tmp3 != foo.end())
+	{
+		std::cout << tmp3->first << " => " << tmp3->second << '\n';
+		tmp3++;
+	}
+	tmp3--;
+
+	swap(bar, foo);
+	swap(foo, bar);
+	swap(bar, foo); //tmp3 iterates through bar
+				//tmp iterates through foo
+
+	print(other);
+	print(foo);
+	print(bar);
+
+	while(tmp != foo.end())
+	{
+		std::cout << tmp->first << " => " << tmp->second << '\n';
+		tmp++;
 	}
 
-	for (int i = 0; i < COUNT; i++)
+	while(tmp2 != other.end())
 	{
-		const int idx = rand() % COUNT;
-		vector_buffer[idx].idx = 5;
-	}
-	ft::vector<Buffer>().swap(vector_buffer);
-
-	try
-	{
-		for (int i = 0; i < COUNT; i++)
-		{
-			const int idx = rand() % COUNT;
-			vector_buffer.at(idx);
-			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
-		}
-	}
-	catch(const std::exception& e)
-	{
-		//NORMAL ! :P
-	}
-	
-	for (int i = 0; i < COUNT; ++i)
-	{
-		map_int.insert(ft::make_pair(rand(), rand()));
+		std::cout << tmp2->first << " => " << tmp2->second << '\n';
+		tmp2++;
 	}
 
-	int sum = 0;
-	for (int i = 0; i < 10000; i++)
+	while(tmp3 != bar.begin())
 	{
-		int access = rand();
-		sum += map_int[access];
+		std::cout << tmp3->first << " => " << tmp3->second << '\n';
+		tmp3--;
 	}
-	std::cout << "should be constant with the same seed: " << sum << std::endl;
-
-	{
-		ft::map<int, int> copy = map_int;
-	}
-	MutantStack<char> iterable_stack;
-	for (char letter = 'a'; letter <= 'z'; letter++)
-		iterable_stack.push(letter);
-	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
-	{
-		std::cout << *it;
-	}
-	std::cout << std::endl;
-	return (0);
+	std::cout << tmp3->first << " => " << tmp3->second << '\n';
 }

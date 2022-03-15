@@ -263,15 +263,13 @@ namespace ft
 		protected:
 
 			ptr_node	current;
-			ptr_node	_null;
-			ptr_node	_root;
 
 		public:
 
-			bidirectional_iterator( void ) : current(), _null(), _root() {};
-			explicit bidirectional_iterator( ptr_node x, ptr_node null, ptr_node root ) : current(x), _null(null), _root(root) {};
-			bidirectional_iterator( const bidirectional_iterator &other ) : current(other.current), _null(other._null), _root(other._root) {};
-			bidirectional_iterator &operator=( const bidirectional_iterator &other ) { current = other.current; _null = other._null; _root = other._root; return *this; };
+			bidirectional_iterator( void ) : current() {};
+			explicit bidirectional_iterator( ptr_node x ) : current(x) {};
+			bidirectional_iterator( const bidirectional_iterator &other ) : current(other.current) {};
+			bidirectional_iterator &operator=( const bidirectional_iterator &other ) { current = other.current; return *this; };
 			~bidirectional_iterator( void ) {};
 
 			pointer base( void ) const { return &(current->getKey()); }
@@ -280,12 +278,12 @@ namespace ft
 			pointer operator->( void ) const { return &(operator*()); }
 
 			bidirectional_iterator &operator++( void ) {
-				if ( current == max(_root)) {
-					current = _null;
+				if ( current == max(root())) {
+					current = null();
 					return *this;
 				}
-				if ( current == _null ) {
-					current = _null;
+				if ( current == null() ) {
+					current = null();
 					return *this;
 				}
 				current = successor(current);
@@ -296,11 +294,11 @@ namespace ft
 			
 			bidirectional_iterator &operator--( void ) { 
 				if ( !current ) {
-					current = max(_root);
+					current = max(root());
 					return *this;
 				}
-				if ( current == _null ) {
-					current = max(_root);
+				if ( current == null() ) {
+					current = max(root());
 					return *this;
 				}
 				current = predecessor(current);
@@ -308,27 +306,43 @@ namespace ft
 			}
 			bidirectional_iterator operator--( int ) { bidirectional_iterator __tmp(*this); operator--(); return __tmp; }
 
-			operator bidirectional_iterator<const T, Node>( void ) const { return bidirectional_iterator<const T, Node>(current, _null, _root); }
+			operator bidirectional_iterator<const T, Node>( void ) const { return bidirectional_iterator<const T, Node>(current); }
 
 		private:
 
+			ptr_node 			root( void ) {
+
+				ptr_node _tmp = current;
+				while ( _tmp && _tmp->up() )
+					_tmp = _tmp->up();
+				return _tmp;
+			}
+
+			ptr_node 			null( void ) {
+
+				ptr_node _tmp = current;
+				while ( _tmp->right() )
+					_tmp = _tmp->right();
+				return _tmp;
+			}
+
 			ptr_node 			min( ptr_node node ) {
 
-				while ( node != _null && node->left() != _null )
+				while ( node != null() && node->left() != null() )
 					node = node->left();
 				return node;
 			}
 
 			ptr_node 			max( ptr_node node ) {
 
-				while ( node != _null && node->right() != _null )
+				while ( node != null() && node->right() != null() )
 					node = node->right();
 				return (node);
 			}
 
 			ptr_node 			successor( ptr_node node ) {
 
-				if ( node != _null && node->right() != _null )
+				if ( node != null() && node->right() != null() )
 					return min(node->right());
 				ptr_node tmp = node->up();
 				while ( tmp && node == tmp->right()) {
@@ -340,7 +354,7 @@ namespace ft
 
 			ptr_node 			predecessor( ptr_node node ) {
 
-				if ( node != _null && node->left() != _null )
+				if ( node != null() && node->left() != null() )
 					return (max(node->left()));
 				ptr_node tmp = node->up();
 				while ( tmp && node == tmp->left() )
