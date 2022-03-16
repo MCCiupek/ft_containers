@@ -122,7 +122,7 @@ namespace ft
 			typedef typename iterator_traits<Iter>::pointer         pointer;
 
 			reverse_iterator() : current() {}
-			explicit reverse_iterator(Iter x) : current(x) {}
+			explicit reverse_iterator( Iter x ) : current(x) {}
 
 			template<class U>
 			reverse_iterator( const reverse_iterator<U>& other )  : current(other.base()) {}
@@ -259,15 +259,21 @@ namespace ft
 			typedef typename bidirectional_iterator<T, Node>::pointer			pointer;
 			typedef typename bidirectional_iterator<T, Node>::difference_type	difference_type;
 			typedef Node *														ptr_node;
+			typedef Node &														ref_node;
 
 		protected:
 
 			ptr_node	current;
 
+			// pointer		key;
+			// bool		_null;
+
+
 		public:
 
 			bidirectional_iterator( void ) : current() {};
-			explicit bidirectional_iterator( const ptr_node & x ) : current(x) {};
+			explicit bidirectional_iterator( ref_node & x ) : current( &x ) {};
+			bidirectional_iterator( ptr_node x ) : current( x ) {};
 			bidirectional_iterator( const bidirectional_iterator &other ) : current(other.current) {};
 			bidirectional_iterator &operator=( const bidirectional_iterator &other ) { current = other.current; return *this; };
 			~bidirectional_iterator( void ) {};

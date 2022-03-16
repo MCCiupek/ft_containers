@@ -318,8 +318,8 @@ class BinarySearchTree {
 
 		void rprint_keys( Node * node ) const {
 			if ( node && node != _null ) {
-				std::cout << node->getKey().first << " ";
 				rprint_keys(node->left());
+				std::cout << node->getKey().first << " ";
 				rprint_keys(node->right());
 			}
 		}

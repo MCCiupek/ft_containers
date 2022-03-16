@@ -28,7 +28,7 @@ HEADER			=		algorithm.hpp	\
 
 HEADERS			=		$(addprefix $(DIR_HEADERS), $(HEADER))
 
-DIR_SRCS		=		./srcs/
+DIR_SRCS		=		./srcs/map/
 
 SRC				=		main.cpp
 

@@ -176,7 +176,7 @@ int		main( int argc, char * argv[])
 
 	//classic_tree();
 
-	classic_rbt();
+	//classic_rbt();
 
 	//if ( argc > 1 )
 	//	rand_rbt(std::atoi(argv[1]));

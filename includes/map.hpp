@@ -164,11 +164,11 @@ namespace ft
 			/* ------------------------------------------------------------- */
 			/* ------------------------- ITERATORS ------------------------- */
 
-			iterator begin() { return iterator(_tree.min()); };
-			const_iterator begin() const { return const_iterator(_tree.min()); };
+			iterator begin() { return iterator(*_tree.min()); };
+			const_iterator begin() const { return const_iterator(*_tree.min()); };
 
-			iterator end() { return iterator(_tree.end()); };
-			const_iterator end() const { return const_iterator(_tree.end()); };
+			iterator end() { return iterator(*_tree.end()); };
+			const_iterator end() const { return const_iterator(*_tree.end()); };
 
 			reverse_iterator rbegin() { return reverse_iterator(end()); };
 			const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); };
@@ -228,7 +228,12 @@ namespace ft
 				}
 			}
 
-			void	swap( map &x ) { _tree.swap(x._tree); }
+			void	swap( map &x ) { 
+				// std::swap(_tree, x._tree);
+				// std::swap(_alloc, x._alloc);
+				// std::swap(_comp, x._comp);
+				_tree.swap(x._tree);
+			}
 
 			void	clear( void ) { _tree.clear(); }
 
@@ -349,8 +354,8 @@ namespace ft
 
 	template <typename T1, typename T2>
 	void swap (const map<T1, T2>& x, const map<T1, T2>& y) {
-		std::swap(x, y);
-		//return x.swap(y);
+		//std::swap(x, y);
+		x.swap(y);
 	};
 
 } // namespace ft
