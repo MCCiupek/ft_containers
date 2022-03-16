@@ -31,10 +31,10 @@ typedef _pair<const T1, T2> T3;
 
 int		main(void)
 {
-	if (TEST == 0)
-		std::cout << "std" << std::endl;
-	if (TEST == 1)
-		std::cout << "ft" << std::endl;
+	// if (TEST == 0)
+	// 	std::cout << "std" << std::endl;
+	// if (TEST == 1)
+	// 	std::cout << "ft" << std::endl;
 
 	std::list<T3> lst;
 

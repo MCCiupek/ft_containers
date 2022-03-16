@@ -3,8 +3,7 @@
 mkfile="Makefile"
 search="main"
 SEED=42
-
-echo "test\t\t\tcompil\tft\tstd\tdiff"
+HEAD="test\t\t\tcompil\tft\tstd\tdiff"
 
 get_compil () {
     make 2> _logs
@@ -43,6 +42,8 @@ run_test () {
 
 cd srcs
 
+echo $HEAD
+
 for FILE in *.cpp;
     do printf "%-10s\t\t" "${FILE%.*}"
     cd ..
@@ -52,7 +53,9 @@ for FILE in *.cpp;
 
 for REPO in */;
     do cd $REPO;
+    
     echo "\n$REPO" | sed 's/.$//'
+    echo $HEAD
 
     sed -i "#" "s#./srcs/#./srcs/$REPO#g" ../../$mkfile
 
