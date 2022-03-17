@@ -5,7 +5,6 @@
 # include <iostream>
 # include "iterator.hpp"
 # include "algorithm.hpp"
-// # include "type_traits.hpp"
 # include "utility.hpp"
 # include "red_black_tree.hpp"
 
@@ -70,7 +69,6 @@ namespace ft
 		protected:
 
 			RedBlackTree<value_type, value_compare, real_allocator_type>	_tree;
-			//allocator_type											_alloc;
 			real_allocator_type										_alloc;
 			Compare													_comp;
 
@@ -102,32 +100,14 @@ namespace ft
 					const Compare& comp = Compare(),
 					const Allocator& alloc = Allocator() ) : _tree(value_compare(comp)), _alloc(alloc), _comp(comp) { 
 				insert(first, last);
-				//_tree = other._tree;
 			};
 
 			/**
 			 * 	Copy constructor
 			 * Constructs the container with the copy of the contents of other.
 			 */
-			//map( const map & other ) : _tree(value_compare(key_compare())), _alloc(other._alloc) { /*std::cout << "copy construct" << std::endl; */insert(other.begin(), other.end()); };
-			//map( const map & other ) : _tree(other.value_comp()), _alloc(other._alloc) { insert(other.begin(), other.end()); };
 			map( const map & other ) : _tree(value_compare(other._comp)), _alloc(other._alloc), _comp(other._comp) {
-			 	//*this = map(other.begin(), other.end(), other._comp, other._alloc);
-				// std::cout << "copy construct" << std::endl;
-				// std::cout << "size: " << size() << std::endl;
-				// std::cout << "other size: " << other.size() << std::endl;
-				// std::cout << "begin: " << (*other.begin()).first << std::endl;
-				// std::cout << "tail: " << (*other.tail()).first << std::endl;
-				// if (other.size() > 10000)
 				_tree = other._tree;
-				// else
-				// 	insert(other.begin(), other.end());
-				// int i = 0;
-				// for (const_iterator it = other.begin(); it != other.end(); it++) {
-				// 	std::cout << "[" << i << "]: " << (*it).first << " | " << (*it).second << std::endl;
-				// 	insert(*it);
-				// 	i++;
-				// }
 			};
 
 			/**
@@ -140,17 +120,9 @@ namespace ft
 			 * Replaces the contents with a copy of the contents of other.
 			 */
 			map& operator= (const map & other) {
-				//std::cout << "operator =" << std::endl;
 				if ( this != &other ) {
 					clear();
-					//std::cout << "clear OK" << std::endl;
 					_tree = other._tree;
-					// insert(other.begin(), other.end());
-					// if (other.size() > 10000)
-					// 	_tree = other._tree;
-					// else
-					// 	insert(other.begin(), other.end());
-					//std::cout << "insert OK" << std::endl;
 				}
 				return *this; };
 
@@ -163,8 +135,6 @@ namespace ft
 			/* ----------------------- ELEMENT ACCESS ---------------------- */
 
 			mapped_type & operator[] ( const key_type& k ) {
-					// _tree.insert(ft::make_pair(k, mapped_type()));
-					// return (*find(k)).second;
 					return (*((this->insert(ft::make_pair(k, mapped_type()))).first)).second; };
 
 			/* ------------------------------------------------------------- */
@@ -195,14 +165,11 @@ namespace ft
 			/* ------------------------- MODIFIERS ------------------------- */
 
 			ft::pair<iterator, bool>	insert( const value_type & val ) {
-
-				//size_type old_size = size();
 				ft::pair<Node<value_type, value_compare> *, bool> ret = _tree.insert(val);
 				return ft::make_pair(iterator(ret.first), ret.second);
 			}
 
 			iterator	insert( iterator position, const value_type &val ) {
-
 				( void )position;
 				return insert(val).first;
 			}
@@ -210,34 +177,24 @@ namespace ft
 			template <class InputIterator>
 			void	insert( InputIterator first, InputIterator last ) {
 				while (first != last) {
-					//std::cout << "insert " << (*first).first << std::endl;
 					insert(*first++);
-					//++first;
 				}
-				//std::cout << "insert OK" << std::endl;
 			}
 
 			void	erase( iterator position ) { _tree.remove(*position); }
 
 			size_type erase ( const key_type & k ) {
-				//size_type old_size = size();
 				iterator to_remove = find(k);
 				return _tree.remove(*to_remove);
-				//erase(to_remove);
-				//return old_size - size();
 			};
 
 			void	erase( iterator first, iterator last ) {
 				while (first != last) {
-					//first = find(first->first);
 					erase(first++);
 				}
 			}
 
 			void	swap( map &x ) { 
-				// std::swap(_tree, x._tree);
-				// std::swap(_alloc, x._alloc);
-				// std::swap(_comp, x._comp);
 				_tree.swap(x._tree);
 			}
 
@@ -317,7 +274,7 @@ namespace ft
 			}
 
 			// OTHER (debug)
-			void print( void ) { std::cout << _tree << std::endl; }
+			// void print( void ) { std::cout << _tree << std::endl; }
 
 	}; // class map
 
@@ -357,12 +314,6 @@ namespace ft
 	};
 
 	/* 		Swap: */
-
-	// template <typename T1, typename T2>
-	// void swap (const map<T1, T2>& x, const map<T1, T2>& y) {
-	// 	//std::swap(x, y);
-	// 	x.swap(y);
-	// };
 
 	template <class Key, class T, class Compare, class Alloc>
 	void swap (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y) {

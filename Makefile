@@ -28,14 +28,14 @@ HEADER			=		algorithm.hpp	\
 
 HEADERS			=		$(addprefix $(DIR_HEADERS), $(HEADER))
 
-DIR_SRCS		=		./srcs/vector/
+DIR_SRCS		=		./srcs/
 
-SRC				=		inception_main.cpp
+SRC				=		main.cpp
 
 SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))
 
 # OBJS			=		$(SRCS:.cpp=.o)
-OBJS			=		inception_main.o
+OBJS			=		main.o
 
 OBJDIR_FT		=		./obj/ft/
 

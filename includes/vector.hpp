@@ -69,7 +69,7 @@ namespace ft
 				begin_new = end_new = __alloc().allocate(n);
 				if (!empty())
 				{
-					for(pointer begin = __begin_; begin != __end_; begin++)
+					for (pointer begin = __begin_; begin != __end_; begin++)
 						__alloc().construct(end_new++, *begin);
 				}
 				this->~vector();
@@ -79,21 +79,21 @@ namespace ft
 			}
 
 			difference_type insert_shared(pointer position, size_type n) {
-				if (!n)
-					return (-1);
+				if ( !n )
+					return -1;
 				difference_type idx = position - __begin_;
 				if ((__end_ + n > __end_cap()) || !__begin_)
 				{
 					realloc(std::max(size() + n, capacity() * 2));
 					position = __begin_ + idx;
 				}
-				for (difference_type move = __end_ - position - 1; move >= 0; move--)
+				for (difference_type i = __end_ - position - 1; i >= 0; i--)
 				{
-					__alloc().destroy(position + move);
-					__alloc().construct(position + move + n, *(position + move));
+					__alloc().construct(position + i + n, *(position + i));
+					__alloc().destroy(position + i);
 				}
 				__end_ += n;
-				return (idx);
+				return idx;
 			}
 		
 		/* ------------------------------------------------------------- */
@@ -143,7 +143,6 @@ namespace ft
 			{
 				v_allocate(other.size());
 				range_init(__begin_, other.begin(), other.end());
-				//insert(begin(), other.begin(), other.end());
             };
 
 			/**
@@ -280,14 +279,16 @@ namespace ft
 			};
 
 			void insert (iterator position, size_type n, const value_type& val) {
-				value_init(insert_shared(position.base(), n) + __begin_, n, val);
+				difference_type idx = insert_shared(position.base(), n);
+				value_init(__begin_ + idx, n, val);
 			};
 
 			template <class InputIterator>
 			void insert (iterator position, InputIterator first, InputIterator last,
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
 				difference_type size = ft::distance(first, last);
-				range_init(insert_shared(position.base(), size) + __begin_, first, last);
+				difference_type idx = insert_shared(position.base(), size);
+				range_init(__begin_ + idx, first, last);
 			};
 
 			iterator erase (iterator position) { return erase(position, position + 1); };

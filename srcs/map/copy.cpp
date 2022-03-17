@@ -26,7 +26,7 @@ void	print(map<Key, T>& lst)
 
 int main () {
 
-	int r = 50;
+	int r = 10;
 
 	map<int, int> mp;
 	map<int, int> mp1;

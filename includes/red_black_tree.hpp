@@ -91,12 +91,6 @@ class Node {
 			pointer tmp_right = other->right();
 			pointer tmp_left = other->left();
 
-			// std::cout << "--- BF SWAP ---" << std::endl;
-			// std::cout << "*this : " << std::endl;
-			// std::cout << n(this, _null) << std::endl;
-			// std::cout << "other : " << std::endl;
-			// std::cout << n(other, _null) << std::endl;
-
 			if ( other->right() && other->right() != _null && other->right() != this )
 				other->right()->up() = this;
 				
@@ -148,49 +142,43 @@ class Node {
 				left() = tmp_left;
 			else
 				left() = other;
-			
-			// std::cout << "--- AF SWAP ---" << std::endl;
-			// std::cout << "*this : " << std::endl;
-			// std::cout << n(this, _null) << std::endl;
-			// std::cout << "other : " << std::endl;
-			// std::cout << n(other, _null) << std::endl;
 		}
 
 }; /* class Node */
 
-template <class T, class Compare>
-std::string p( Node<T, Compare> * node, Node<T, Compare> * _null  ) {
-	std::stringstream os;
+// template <class T, class Compare>
+// std::string p( Node<T, Compare> * node, Node<T, Compare> * _null  ) {
+// 	std::stringstream os;
 
-	if ( !node )
-		os << "NULL";
-	else if ( node == _null )
-		os << "_null";
-	else
-		os << node->getKey().first;
-	return os.str();
-}
+// 	if ( !node )
+// 		os << "NULL";
+// 	else if ( node == _null )
+// 		os << "_null";
+// 	else
+// 		os << node->getKey().first;
+// 	return os.str();
+// }
 
-template <class T, class Compare>
-std::string n( Node<T, Compare> * node, Node<T, Compare> * _null  ) {
-	std::stringstream os;
+// template <class T, class Compare>
+// std::string n( Node<T, Compare> * node, Node<T, Compare> * _null  ) {
+// 	std::stringstream os;
 
-	if (!node)
-		return "  - [NULL NODE]\n";
-	os << "  -key : " <<  p(node, _null) << std::endl;
-	os << "  -up : " << p(node->up(), _null) << std::endl;
-	os << "  -left : " << p(node->left(), _null) << std::endl;
-	os << "  -right : " << p(node->right(), _null) << std::endl;
-	if (node->left())
-		os << "  -left->up() : " << p(node->left()->up(), _null) << std::endl;
-	if (node->right())
-		os << "  -right->up() : " << p(node->right()->up(), _null) << std::endl;
-	if (node->up())
-		os << "  -up->left : " << p(node->up()->left(), _null) << std::endl;
-	if (node->up())
-		os << "  -up->right : " << p(node->up()->right(), _null) << std::endl;
-	return os.str();
-}
+// 	if (!node)
+// 		return "  - [NULL NODE]\n";
+// 	os << "  -key : " <<  p(node, _null) << std::endl;
+// 	os << "  -up : " << p(node->up(), _null) << std::endl;
+// 	os << "  -left : " << p(node->left(), _null) << std::endl;
+// 	os << "  -right : " << p(node->right(), _null) << std::endl;
+// 	if (node->left())
+// 		os << "  -left->up() : " << p(node->left()->up(), _null) << std::endl;
+// 	if (node->right())
+// 		os << "  -right->up() : " << p(node->right()->up(), _null) << std::endl;
+// 	if (node->up())
+// 		os << "  -up->left : " << p(node->up()->left(), _null) << std::endl;
+// 	if (node->up())
+// 		os << "  -up->right : " << p(node->up()->right(), _null) << std::endl;
+// 	return os.str();
+// }
 
 template< class T, class Compare = std::less<T>, class Allocator = std::allocator<Node<T, Compare> > >
 class BinarySearchTree {
@@ -223,24 +211,10 @@ class BinarySearchTree {
 		};
 		BinarySearchTree( const BinarySearchTree & other ) : _root(other._root), _cmp(other._cmp), _null(other._null), _alloc(other._alloc) {};
 		BinarySearchTree& operator=( const BinarySearchTree & other ) {
-			// std::cout << "BST op=" << std::endl;
 			if ( this != &other ) {
-				// _root = other._root;
-				// _cmp = other._cmp;
-				// _alloc = other._alloc;
-				// _null = other._null;
-				//clear();
-				//_alloc.destroy(_root);
-				//_alloc.deallocate(_root, 1);
-				// _null = _alloc.allocate(1);
-				// _alloc.construct(_null, Node());
-				// _root = _null;
-				// std::cout << other.size() << std::endl;
 				if ( _root !=  _null )
 					clear();
 				copy(other);
-				// if ( other.size() )
-				//  	copy(other);
 			}
 			return *this;
 		};
@@ -254,7 +228,6 @@ class BinarySearchTree {
 
 		Node * rinsert( Node * node, value_type key, Node * prev=NULL ) { 
 			if ( !node || node == _null ) {
-				//std::cout << "construct & allocate " << key.first << std::endl;
 				Node * new_node = _alloc.allocate(1);
 				if ( !prev )
 					_alloc.construct(new_node, Node(key));
@@ -295,7 +268,6 @@ class BinarySearchTree {
 					_alloc.destroy(node);
 					_alloc.deallocate(node, 1);
 					_remove_return = true;
-					//if ( prev )
 					tmp->up() = prev;
 					return tmp;
 				}
@@ -304,7 +276,6 @@ class BinarySearchTree {
 					_alloc.destroy(node);
 					_alloc.deallocate(node, 1);
 					_remove_return = true;
-					// if ( prev )
 					tmp->up() = prev;
 					return tmp;
 				}
@@ -333,22 +304,6 @@ class BinarySearchTree {
 				remove(node->getKey());
 			}
 		}
-
-		// void rcopy1( Node * node ) {
-		// 	if ( node && node != _null ) {
-		// 		_root = insert(node->getKey()).first;
-		// 		rcopy(node->left());
-		// 		rcopy(node->right());
-		// 	}
-		// }
-
-		// Node * rcopy( Node * node, value_type key, Node * prev=NULL ) {
-		// 	if ( node && node != _null ) {
-		// 		node = rinsert(node->getKey());
-		// 		rcopy(node->left());
-		// 		rcopy(node->right());
-		// 	}
-		// }
 
 		void rcopy( Node *& node, Node * prev, Node * other_node, Node * other_null )
 		{
@@ -441,11 +396,6 @@ class BinarySearchTree {
 		void		swap( BinarySearchTree & other ) {
 			std::swap(_root, other._root);
 			std::swap(_null, other._null);
-			// std::swap(*this, other);
-
-			// BinarySearchTree * temp = this;
-			// *this = other;
-			// other = temp; 
 		}
 		
 
@@ -481,12 +431,10 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 
 		RedBlackTree( value_compare const & cmp = value_compare(), const Alloc& alloc = Alloc() ) : BinarySearchTree( cmp, alloc ) {};
 		RedBlackTree( const BinarySearchTree & other ) : BinarySearchTree(other) {};
-		// RedBlackTree& operator=( const RedBlackTree & other ) {
-		// 	if ( this != &other ) {
-		// 		this->_root = other._root;	
-		// 	}
-		// 	return *this;
-		// };
+		RedBlackTree& operator=( const RedBlackTree & other ) {
+			BinarySearchTree::operator=(other);
+			return *this;
+		};
 		~RedBlackTree() {};
 
 	private:
@@ -531,19 +479,16 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 		}
 
 		void insert_case1( Node * node ) {
-			// std::cout << "CASE 1" << std::endl;
 			node->setColor(BLACK);
 			this->_null->setColor(BLACK);
 		}
 
 		void insert_case2( Node * node ) {
-			// std::cout << "CASE 2" << std::endl;
 			(void)node;
 			return;
 		}
 
 		void insert_case31( Node * node ) {
-			// std::cout << "CASE 31" << std::endl;
 			Node * p = node->up();
 			Node * g = node->up()->up();
 			Node * u = node->uncle();
@@ -554,7 +499,6 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 		}
 
 		void insert_case321( Node * node ) {
-			// std::cout << "CASE 321" << std::endl;
 			Node * p = node->up();
 			Node * g = node->up()->up();
 			lrotate(g);
@@ -563,14 +507,12 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 		}
 
 		void insert_case322( Node * node ) {
-			// std::cout << "CASE 322" << std::endl;
 			Node * p = node->up();
 			rrotate(p);
 			insert_case321(node->right());
 		}
 
 		void insert_case323( Node * node ) {
-			// std::cout << "CASE 323" << std::endl;
 			Node * p = node->up();
 			Node * g = node->up()->up();
 			rrotate(g);
@@ -579,7 +521,6 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 		}
 
 		void insert_case324( Node * node ) {
-			// std::cout << "CASE 324" << std::endl;
 			Node * p = node->up();
 			lrotate(p);
 			insert_case323(node->left());
@@ -629,45 +570,15 @@ class RedBlackTree : public BinarySearchTree<T, Compare> {
 			ft::pair<Node *, bool> _insert;
 
 			_insert = BinarySearchTree::insert(key);
-			//return BinarySearchTree::insert(key);
-			// std::cout << "insert " << key.first << std::endl;
-			// std::cout << *this << std::endl;
 			if ( _insert.second ) {
 				insert_rebalance(_insert.first);
-				// while ( this->_root->up() && this->_root->up() != this->_null )
-				// {
-				// 	this->_root = this->_root->up();
-				// }
 			}
 			this->_null->setColor(BLACK);
-			// std::cout << *this << std::endl;
 			return _insert;
-			// insert_repair_tree(_new);
-			// std::cout << *this << std::endl;
-			// std::cout << "root: " << this->_root->getKey().first << std::endl;
-			
-			
 		}
 
 		bool	remove( value_type key ) {
 			return BinarySearchTree::remove(key);
-			
-			// Node * to_remove = search(key);
-			// this->_remove_return = false;
-			// if ( !to_remove || to_remove == this->_null )
-			// 	return this->_remove_return;
-			// if ( to_remove->right() != this->_null && to_remove->left() != this->_null ) {
-			// 	Node * _tmp = rmin(to_remove->right());
-			// 	to_remove->swap(_tmp, this->_null);
-			// 	if ( this->_root == to_remove )
-			// 		this->_root = _tmp;
-			// 	// change colors
-			// 	_tmp->right() = rremove(_tmp->right(), key);
-			// 	return this->_remove_return;
-			// }
-			// // change colors
-			// this->_root = rremove(this->_root, key);
-			// return this->_remove_return;
 		}
 
 }; /* class RedBlackTree */

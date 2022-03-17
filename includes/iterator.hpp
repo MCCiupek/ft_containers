@@ -3,7 +3,6 @@
 
 # pragma once
 # include <iostream>
-//# include "type_traits.hpp"
 
 namespace ft
 {
@@ -90,15 +89,6 @@ namespace ft
 				advance(x, n);
 			return x;
 		}; /* next */
-
-	// template <class BidirectionalIterator>
-	// BidirectionalIterator prev( BidirectionalIterator x,
-	// 	typename ft::iterator_traits<BidirectionalIterator>::difference_type n = 1,
-	// 	typename ft::enable_if<BidirectionalIterator::iterator_category == BidirectionalIterator::bidirectional_iterator_tag>::type* = 0 ) {
-	// 		if (n >= 0)
-	// 			advance(x, -n);
-	// 		return x;
-	// 	}; /* prev */
 
 	/* ------------------------------------------------------------- */
 	/* ------------------ REVERSE ITERATORS --------------------- */
@@ -265,14 +255,10 @@ namespace ft
 
 			ptr_node	current;
 
-			// pointer		key;
-			// bool		_null;
-
 
 		public:
 
 			bidirectional_iterator( void ) : current() {};
-			// bidirectional_iterator( ref_node & x ) : current( &x ) {};
 			explicit bidirectional_iterator( ptr_node x ) : current( x ) {};
 			bidirectional_iterator( const bidirectional_iterator &other ) : current(other.current) {};
 			bidirectional_iterator &operator=( const bidirectional_iterator &other ) { current = other.current; return *this; };

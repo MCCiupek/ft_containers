@@ -54,8 +54,6 @@ all () {
         cd srcs
     done
 
-    printf "\n"
-
     for REPO in */; do
         cd $REPO;
         
@@ -72,6 +70,8 @@ all () {
         done
         
         sed -i "#" "s#./srcs/$REPO#./srcs/#g" ../../$mkfile
+
+        cd ..
     done
 
     cd ..
