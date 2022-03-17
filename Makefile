@@ -36,13 +36,13 @@ SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))
 
 OBJS			=		main.o
 
-OBJDIR_FT		=		./obj/ft/
+OBJDIR_FT		=		./obj_ft/
 
-OBJDIR_STD		=		./obj/std/
+OBJDIR_STD		=		./obj_std/
 
-OBJS_FT			=		$(addprefix $(OBJDIR_FT),$(OBJS))
+OBJS_FT 		=		$(SRCS:%.cpp=$(OBJDIR_FT)%.o)
 
-OBJS_STD 		=		$(addprefix $(OBJDIR_STD),$(OBJS))
+OBJS_STD 		=		$(SRCS:%.cpp=$(OBJDIR_STD)%.o)
 
 NAME			=		containers
 
@@ -63,20 +63,22 @@ endif
 
 all: ft std
 
-$(OBJS_FT): $(OBJDIR_FT)%.o : $(SRCS)
-	$(CC) $(FLAGS) -D TESTED_NAMESPACE_FT -I $(DIR_HEADERS) -c $< -o $@
-
-$(OBJS_STD): $(OBJDIR_STD)%.o : $(SRCS)
-	$(CC) $(FLAGS) -D TESTED_NAMESPACE_STD -I $(DIR_HEADERS) -c $< -o $@
-
 ft: $(OBJS_FT)
 	$(CC) $(FLAGS) -D TESTED_NAMESPACE_FT $< -o $(NAME_FT)
 
 std: $(OBJS_STD)
 	$(CC) $(FLAGS) -D TESTED_NAMESPACE_STD $< -o $(NAME_STD)
 
+$(OBJDIR_FT)%.o : $(SRCS) $(HEADERS)
+	mkdir -p $(dir $@)
+	$(CC) $(FLAGS) -D TESTED_NAMESPACE_FT -I $(DIR_HEADERS) -c $< -o $@
+
+$(OBJDIR_STD)%.o : $(SRCS) $(HEADERS)
+	mkdir -p $(dir $@)
+	$(CC) $(FLAGS) -D TESTED_NAMESPACE_STD -I $(DIR_HEADERS) -c $< -o $@
+
 clean:
-	$(RM) $(OBJDIR_FT)*.o $(OBJDIR_STD)*.o
+	$(RM) $(OBJDIR_FT) $(OBJDIR_STD)
 
 fclean: clean
 	$(RM) $(NAME) $(NAME_FT) $(NAME_STD)
@@ -93,6 +95,7 @@ re: fclean all
 test: all
 	./$(NAME_FT) 42 > ft_out
 	./$(NAME_STD) 42 > std_out
+	diff ft_out std_out
 
 .PHONY: all, clean, fclean, re, git, bonus, ft, std, test, diff, ft_out, std_out
 

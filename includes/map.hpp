@@ -88,7 +88,7 @@ namespace ft
 			 *	Constructs an empty container, with no elements.
 			 */
 			explicit map( const Compare& comp = key_compare(), const Allocator& alloc = Allocator() ) 
-				: _tree(value_compare(comp)), _alloc(alloc), _comp(comp) { /* std::cout << "def construct" << std::endl; */ }
+				: _tree(value_compare(comp)), _alloc(alloc), _comp(comp) {}
 			
 			/**
 			 *	Range constructor

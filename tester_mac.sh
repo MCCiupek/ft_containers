@@ -118,3 +118,4 @@ else
 fi
 
 rm -rf "$mkfile#"
+make fclean

@@ -37,7 +37,7 @@ run_test () {
     [ -s _logs ] && printf "x\t" || get_time test_ft ft_out
     [ -s _logs ] && printf "x\t" || get_time test_std std_out
     [ -s _logs ] && printf "x\n" || get_diff std_out ft_out
-    # rm _logs
+    rm _logs
     sed -i s/$1/$search/g $mkfile
 }
 
@@ -124,3 +124,4 @@ else
 fi
 
 rm -rf "$mkfile#"
+make fclean

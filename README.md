@@ -13,7 +13,13 @@ As a reminder, we are coding in C++98, so any new feature of the containers MUST
 - [x] Vector
 - [x] Map
 - [x] Stack
-  
+
+## Tester
+
+Run all tests : ''sh tester_linux.sh'' or ''sh tester_mac.sh''.
+
+Run only test on a specific container : ''sh tester_linux.sh <container>'' or ''sh tester_mac.sh <container>''.
+
 ## Sources
   
   - [cppreference.com](https://en.cppreference.com/w/)
