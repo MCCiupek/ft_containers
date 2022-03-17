@@ -34,7 +34,6 @@ SRC				=		main.cpp
 
 SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))
 
-# OBJS			=		$(SRCS:.cpp=.o)
 OBJS			=		main.o
 
 OBJDIR_FT		=		./obj/ft/
@@ -72,15 +71,12 @@ $(OBJS_STD): $(OBJDIR_STD)%.o : $(SRCS)
 
 ft: $(OBJS_FT)
 	$(CC) $(FLAGS) -D TESTED_NAMESPACE_FT $< -o $(NAME_FT)
-#	printf "$(GREEN)██"
 
 std: $(OBJS_STD)
 	$(CC) $(FLAGS) -D TESTED_NAMESPACE_STD $< -o $(NAME_STD)
-#	printf "$(GREEN)██"
 
 clean:
 	$(RM) $(OBJDIR_FT)*.o $(OBJDIR_STD)*.o
-#	$(RM) $(OBJS_FT) $(OBJS_STD)
 
 fclean: clean
 	$(RM) $(NAME) $(NAME_FT) $(NAME_STD)
@@ -95,42 +91,9 @@ git: fclean
 re: fclean all
 
 test: all
-# 	printf "\n  $(CYAN)--- FT ---$(RESET)"
 	./$(NAME_FT) 42 > ft_out
-#	printf "\n  $(CYAN)--- STD ---$(RESET)"
 	./$(NAME_STD) 42 > std_out
-#	printf "\n"
-#	sh diff.sh
 
 .PHONY: all, clean, fclean, re, git, bonus, ft, std, test, diff, ft_out, std_out
 
 .SILENT:
-
-### COLOR ###
-
-RESET = \033[0m
-BLACK = \033[0;30m
-RED = \033[0;31m
-GREEN = \033[32m
-YELLOW = \033[33;33m
-BLUE = \033[0;34m
-PURPLE = \033[1;35m
-CYAN = \033[1;36m
-WHITE = \033[0;37m
-
-### ECHO ###
-
-echoCL:
-	printf "\n$(YELLOW)===> Compiling $(RED)$(NAME)$(RESET)\n"
-
-echoCL_ft:
-	printf "\n$(YELLOW)===> Compiling $(RED)$(NAME_FT)$(RESET)\n"
-
-echoCL_std:
-	printf "\n$(YELLOW)===> Compiling $(RED)$(NAME_STD)$(RESET)\n"
-
-echoCS :
-	printf "$(GREEN)OK\n"
-
-echoCLEAN :
-	printf "$(PURPLE)$(NAME) ===> Cleaning$(RESET)\n"

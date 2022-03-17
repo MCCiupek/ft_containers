@@ -66,6 +66,9 @@ namespace ft
 
 			void realloc(size_type n) {
 				pointer begin_new, end_new;
+				if ( size() + n > max_size() ) {
+					throw std::length_error("vector::reserve");
+				}
 				begin_new = end_new = __alloc().allocate(n);
 				if (!empty())
 				{

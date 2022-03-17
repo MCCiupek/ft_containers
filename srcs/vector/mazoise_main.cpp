@@ -66,7 +66,7 @@ void	print_vector(vector<T> &test)
 {
 	typename vector<T>::iterator		beg = test.begin();
 	typename vector<T>::iterator		end = test.end();
-	std::cout << "size : " << test.size() << ", capacity : " << test.capacity() << std::endl;
+	std::cout << "size : " << test.size() << /*", capacity : " << test.capacity() <<*/ std::endl;
 	for (typename vector<T>::iterator it = beg; it != end; it++)
 	{
 		std::cout << *it << " ";
@@ -167,7 +167,7 @@ void	reserve_tests(void)
 	}
 	catch(std::exception &e)
 	{
-		std::cout << "error : " << e.what() << std::endl;
+		std::cout << "exception" << std::endl;
 	}
 	print_vector<T>(test);
 }
