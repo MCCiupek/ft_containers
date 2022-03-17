@@ -146,40 +146,6 @@ class Node {
 
 }; /* class Node */
 
-// template <class T, class Compare>
-// std::string p( Node<T, Compare> * node, Node<T, Compare> * _null  ) {
-// 	std::stringstream os;
-
-// 	if ( !node )
-// 		os << "NULL";
-// 	else if ( node == _null )
-// 		os << "_null";
-// 	else
-// 		os << node->getKey().first;
-// 	return os.str();
-// }
-
-// template <class T, class Compare>
-// std::string n( Node<T, Compare> * node, Node<T, Compare> * _null  ) {
-// 	std::stringstream os;
-
-// 	if (!node)
-// 		return "  - [NULL NODE]\n";
-// 	os << "  -key : " <<  p(node, _null) << std::endl;
-// 	os << "  -up : " << p(node->up(), _null) << std::endl;
-// 	os << "  -left : " << p(node->left(), _null) << std::endl;
-// 	os << "  -right : " << p(node->right(), _null) << std::endl;
-// 	if (node->left())
-// 		os << "  -left->up() : " << p(node->left()->up(), _null) << std::endl;
-// 	if (node->right())
-// 		os << "  -right->up() : " << p(node->right()->up(), _null) << std::endl;
-// 	if (node->up())
-// 		os << "  -up->left : " << p(node->up()->left(), _null) << std::endl;
-// 	if (node->up())
-// 		os << "  -up->right : " << p(node->up()->right(), _null) << std::endl;
-// 	return os.str();
-// }
-
 template< class T, class Compare = std::less<T>, class Allocator = std::allocator<Node<T, Compare> > >
 class BinarySearchTree {
 
