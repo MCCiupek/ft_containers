@@ -27,29 +27,28 @@ void	print(map<Key, T>& lst)
 int main ()
 {
 	map<char,int>				foo, bar;
-	map<int, std::string>			test;
-	map<int, int> *				ptr = new map<int,int>();
 
 	foo['x']=100;
 	foo['y']=200;
-	foo['z']=300;
 
-	delete ptr;
+	bar['a']=11;
+	bar['b']=22;
+	bar['c']=33;
 
-	bar = foo;
-	
-	map<char,int>				foo_range(foo.begin(), --foo.end());
+	map<char, int>::const_iterator tmp = foo.begin();
+	map<char, int>::iterator tmp1 = foo.begin();
 
-	test[0]="foo";
-	test[1]="bar";
-
-	map<int, std::string>			test_cpy(test);
-
+	std::cout << tmp->first << std::endl;
+	std::cout << tmp1->first << std::endl;
 	print(foo);
 	print(bar);
-	print(test);
-	print(foo_range);
-	print(test_cpy);
+
+ 	swap(bar, foo);
+	
+	std::cout << tmp->first << std::endl;
+	std::cout << tmp1->first << std::endl;
+	print(foo);
+	print(bar);
 
 	return 0;
 }

@@ -272,8 +272,8 @@ namespace ft
 		public:
 
 			bidirectional_iterator( void ) : current() {};
-			explicit bidirectional_iterator( ref_node & x ) : current( &x ) {};
-			bidirectional_iterator( ptr_node x ) : current( x ) {};
+			// bidirectional_iterator( ref_node & x ) : current( &x ) {};
+			explicit bidirectional_iterator( ptr_node x ) : current( x ) {};
 			bidirectional_iterator( const bidirectional_iterator &other ) : current(other.current) {};
 			bidirectional_iterator &operator=( const bidirectional_iterator &other ) { current = other.current; return *this; };
 			~bidirectional_iterator( void ) {};

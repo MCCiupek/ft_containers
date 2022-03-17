@@ -37,39 +37,84 @@ run_test () {
     [ -s _logs ] && printf "x\t" || get_time test_ft ft_out
     [ -s _logs ] && printf "x\t" || get_time test_std std_out
     [ -s _logs ] && printf "x\n" || get_diff std_out ft_out
+    # rm _logs
     sed -i "" s/$1/$search/g $mkfile
 }
 
-cd srcs
+all () {
 
-echo $HEAD
-
-for FILE in *.cpp;
-    do printf "%-10s\t\t" "${FILE%.*}"
-    cd ..
-    run_test ${FILE%.*}
     cd srcs
-    done
 
-for REPO in */;
-    do cd $REPO;
-    
-    echo "\n$REPO" | sed 's/.$//'
     echo $HEAD
 
-    sed -i "#" "s#./srcs/#./srcs/$REPO#g" ../../$mkfile
-
-    for FILE in *.cpp;
-        do printf "%-10s\t\t" "${FILE%.*}"
-        cd ../..
+    for FILE in *.cpp; do 
+        printf "%-10s\t\t" "${FILE%.*}"
+        cd ..
         run_test ${FILE%.*}
-        cd srcs/$REPO
-        done
-    
-    sed -i "#" "s#./srcs/$REPO#./srcs/#g" ../../$mkfile
-
+        cd srcs
     done
 
-cd ..
+    printf "\n"
 
+    for REPO in */; do
+        cd $REPO;
+        
+        echo "\n$REPO" | sed 's/.$//'
+        echo $HEAD
 
+        sed -i "#" "s#./srcs/#./srcs/$REPO#g" ../../$mkfile
+
+        for FILE in *.cpp; do
+            printf "%-10s\t\t" "${FILE%.*}"
+            cd ../..
+            run_test ${FILE%.*}
+            cd srcs/$REPO
+        done
+        
+        sed -i "#" "s#./srcs/$REPO#./srcs/#g" ../../$mkfile
+    done
+
+    cd ..
+
+}
+
+container () {
+
+    cd srcs
+
+    for REPO in */; do
+        if [ $1/ = $REPO ]; then
+            cd $REPO;
+            
+            echo "$REPO" | sed 's/.$//'
+            echo $HEAD
+
+            sed -i "#" "s#./srcs/#./srcs/$REPO#g" ../../$mkfile
+
+            for FILE in *.cpp;
+                do printf "%-10s\t\t" "${FILE%.*}"
+                cd ../..
+                run_test ${FILE%.*}
+                cd srcs/$REPO
+                done
+            
+            sed -i "#" "s#./srcs/$REPO#./srcs/#g" ../../$mkfile
+
+        fi
+    done
+
+    cd ..
+
+}
+
+make fclean
+
+if [ -z "$1" ]; then
+    all
+else
+    for CONT in $@; do
+        container $CONT
+    done
+fi
+
+rm -rf "$mkfile#"

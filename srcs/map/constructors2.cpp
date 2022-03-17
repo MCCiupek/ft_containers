@@ -15,8 +15,6 @@
 	#define TEST 1
 #endif
 
-#include <unistd.h>
-
 using namespace NAMESPACE;
 
 template <class Key, class T>
@@ -26,33 +24,25 @@ void	print(map<Key, T>& lst)
 	std::cout << it->first << " => " << it->second << '\n';
 }
 
-int main ()
-{
-	map<char,int>				foo, bar;
-	map<int, std::string>			test;
-	map<int, int> *				ptr = new map<int,int>();
+int main () {
 
-	foo['x']=100;
-	foo['y']=200;
-	foo['z']=300;
+	int r = 50;
 
-	delete ptr;
+	map<int, int> mp;
+	map<int, int> mp1;
 
-	bar = foo;
-	
-	map<char,int>				foo_range(foo.begin(), --foo.end());
+    for (int i = 0, j = 10; i < 30 * r; ++i, ++j) {
+        mp.insert(make_pair(i, j));
+    }
+	std::cout << "inserted" << std::endl;
+    map<int, int> mp2(mp);
+	std::cout << "copy" << std::endl;
+    mp1 = mp;
+	std::cout << "eq" << std::endl;
 
-	test[0]="foo";
-	test[1]="bar";
-	test[2]="foobar";
+	print(mp);
+	print(mp1);
+	print(mp2);
 
-	map<int, std::string>			test_cpy(test);
-
-	print(foo);
-	print(bar);
-	print(test);
-	print(foo_range);
-	print(test_cpy);
-
-	return 0;
+    return 0;
 }

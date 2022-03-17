@@ -217,7 +217,6 @@ class BinarySearchTree {
 	public:
 
 		BinarySearchTree( value_compare const & cmp = value_compare(), const Allocator& alloc = Allocator() ) : _root(NULL), _cmp(cmp), _alloc(alloc) {
-			//std::cout << "new BST" << std::endl;
 			_null = _alloc.allocate(1);
 			_alloc.construct(_null, Node());
 			_root = _null;
@@ -237,8 +236,11 @@ class BinarySearchTree {
 				// _alloc.construct(_null, Node());
 				// _root = _null;
 				// std::cout << other.size() << std::endl;
-				if ( other.size() )
-					copy(other);
+				if ( _root !=  _null )
+					clear();
+				copy(other);
+				// if ( other.size() )
+				//  	copy(other);
 			}
 			return *this;
 		};
@@ -332,11 +334,39 @@ class BinarySearchTree {
 			}
 		}
 
-		void rcopy( Node * node ) {
-			if ( node && node != _null ) {
-				rcopy(node->left());
-				rcopy(node->right());
-				_root = insert(node->getKey()).first;
+		// void rcopy1( Node * node ) {
+		// 	if ( node && node != _null ) {
+		// 		_root = insert(node->getKey()).first;
+		// 		rcopy(node->left());
+		// 		rcopy(node->right());
+		// 	}
+		// }
+
+		// Node * rcopy( Node * node, value_type key, Node * prev=NULL ) {
+		// 	if ( node && node != _null ) {
+		// 		node = rinsert(node->getKey());
+		// 		rcopy(node->left());
+		// 		rcopy(node->right());
+		// 	}
+		// }
+
+		void rcopy( Node *& node, Node * prev, Node * other_node, Node * other_null )
+		{
+			if (other_node == other_null) {
+				node = _null;
+			}
+			else {
+				Node * new_node = _alloc.allocate(1);
+				if ( !prev )
+					_alloc.construct(new_node, Node(other_node->getKey()));
+				else
+					_alloc.construct(new_node, Node(other_node->getKey(), *prev));
+				new_node->right() = _null;
+				new_node->left() = _null;
+				_null->up() = new_node;
+				node = new_node;
+				rcopy(node->left(), node, other_node->left(), other_null);
+				rcopy(node->right(), node, other_node->right(), other_null);
 			}
 		}
 
@@ -389,7 +419,7 @@ class BinarySearchTree {
 		size_type					size( void ) const { return rsize(_root); }
 		size_type					max_size( void ) const { return _alloc.max_size(); }
 		void						clear( void ) { rdelete(_root); }
-		void						copy( const BinarySearchTree & other ) { rcopy(other._root); }
+		void						copy( const BinarySearchTree & other ) { rcopy(_root, NULL, other._root, other._null); }
 
 		bool		remove( value_type key ) {
 			Node * to_remove = search(key);
@@ -411,6 +441,11 @@ class BinarySearchTree {
 		void		swap( BinarySearchTree & other ) {
 			std::swap(_root, other._root);
 			std::swap(_null, other._null);
+			// std::swap(*this, other);
+
+			// BinarySearchTree * temp = this;
+			// *this = other;
+			// other = temp; 
 		}
 		
 

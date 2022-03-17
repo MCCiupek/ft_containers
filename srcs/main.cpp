@@ -70,7 +70,6 @@ int main ()
   bar['b']=22;
   bar['c']=33;
 
-	std::cout << "-----" << std::endl;
   map<char, int>::const_iterator tmp = foo.begin(); //tmp iterates through foo
   map<char, int>::iterator tmp1 = foo.begin(); //tmp iterates through foo
 //   map<char, int>::const_iterator tmp2 = bar.begin(); //tmp2 iterates through bar

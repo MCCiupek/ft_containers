@@ -102,6 +102,7 @@ namespace ft
 					const Compare& comp = Compare(),
 					const Allocator& alloc = Allocator() ) : _tree(value_compare(comp)), _alloc(alloc), _comp(comp) { 
 				insert(first, last);
+				//_tree = other._tree;
 			};
 
 			/**
@@ -117,10 +118,10 @@ namespace ft
 				// std::cout << "other size: " << other.size() << std::endl;
 				// std::cout << "begin: " << (*other.begin()).first << std::endl;
 				// std::cout << "tail: " << (*other.tail()).first << std::endl;
-				if (other.size() > 10000)
-					_tree = other._tree;
-				else
-					insert(other.begin(), other.end());
+				// if (other.size() > 10000)
+				_tree = other._tree;
+				// else
+				// 	insert(other.begin(), other.end());
 				// int i = 0;
 				// for (const_iterator it = other.begin(); it != other.end(); it++) {
 				// 	std::cout << "[" << i << "]: " << (*it).first << " | " << (*it).second << std::endl;
@@ -143,7 +144,12 @@ namespace ft
 				if ( this != &other ) {
 					clear();
 					//std::cout << "clear OK" << std::endl;
-					insert(other.begin(), other.end());
+					_tree = other._tree;
+					// insert(other.begin(), other.end());
+					// if (other.size() > 10000)
+					// 	_tree = other._tree;
+					// else
+					// 	insert(other.begin(), other.end());
 					//std::cout << "insert OK" << std::endl;
 				}
 				return *this; };
@@ -164,11 +170,11 @@ namespace ft
 			/* ------------------------------------------------------------- */
 			/* ------------------------- ITERATORS ------------------------- */
 
-			iterator begin() { return iterator(*_tree.min()); };
-			const_iterator begin() const { return const_iterator(*_tree.min()); };
+			iterator begin() { return iterator(_tree.min()); };
+			const_iterator begin() const { return const_iterator(_tree.min()); };
 
-			iterator end() { return iterator(*_tree.end()); };
-			const_iterator end() const { return const_iterator(*_tree.end()); };
+			iterator end() { return iterator(_tree.end()); };
+			const_iterator end() const { return const_iterator(_tree.end()); };
 
 			reverse_iterator rbegin() { return reverse_iterator(end()); };
 			const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); };
@@ -352,11 +358,16 @@ namespace ft
 
 	/* 		Swap: */
 
-	template <typename T1, typename T2>
-	void swap (const map<T1, T2>& x, const map<T1, T2>& y) {
-		//std::swap(x, y);
+	// template <typename T1, typename T2>
+	// void swap (const map<T1, T2>& x, const map<T1, T2>& y) {
+	// 	//std::swap(x, y);
+	// 	x.swap(y);
+	// };
+
+	template <class Key, class T, class Compare, class Alloc>
+	void swap (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y) {
 		x.swap(y);
-	};
+	}
 
 } // namespace ft
 

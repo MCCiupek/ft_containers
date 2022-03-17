@@ -28,7 +28,7 @@ HEADER			=		algorithm.hpp	\
 
 HEADERS			=		$(addprefix $(DIR_HEADERS), $(HEADER))
 
-DIR_SRCS		=		./srcs/map/
+DIR_SRCS		=		./srcs/vector/
 
 SRC				=		main.cpp
 
@@ -79,7 +79,8 @@ std: $(OBJS_STD)
 #	printf "$(GREEN)██"
 
 clean:
-	$(RM) $(OBJS_FT) $(OBJS_STD)
+	$(RM) $(OBJDIR_FT)*.o $(OBJDIR_STD)*.o
+#	$(RM) $(OBJS_FT) $(OBJS_STD)
 
 fclean: clean
 	$(RM) $(NAME) $(NAME_FT) $(NAME_STD)

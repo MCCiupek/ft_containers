@@ -28,14 +28,14 @@ HEADER			=		algorithm.hpp	\
 
 HEADERS			=		$(addprefix $(DIR_HEADERS), $(HEADER))
 
-DIR_SRCS		=		./srcs/
+DIR_SRCS		=		./srcs/vector/
 
-SRC				=		main.cpp
+SRC				=		inception_main.cpp
 
 SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))
 
 # OBJS			=		$(SRCS:.cpp=.o)
-OBJS			=		main.o
+OBJS			=		inception_main.o
 
 OBJDIR_FT		=		./obj/ft/
 
@@ -79,7 +79,8 @@ std: $(OBJS_STD)
 #	printf "$(GREEN)██"
 
 clean:
-	$(RM) $(OBJS_FT) $(OBJS_STD)
+	$(RM) $(OBJDIR_FT)*.o $(OBJDIR_STD)*.o
+#	$(RM) $(OBJS_FT) $(OBJS_STD)
 
 fclean: clean
 	$(RM) $(NAME) $(NAME_FT) $(NAME_STD)
